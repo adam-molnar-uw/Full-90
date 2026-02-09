@@ -55,668 +55,860 @@
     }
 
     function generateWeeks() {
-      const weeks = [];
+  const weeks = [];
 
-      // WEEK 1
-      weeks.push({
-        number: 1,
-        phase: "Base + Nerve Recovery",
-        focus: "Establish routine, protect sit-bone, build aerobic base without bike seat",
-        progressionGate: "Ischial tuberosity pain not worsening. Can complete all physio exercises without flare-up.",
-        days: [
-          {
-            day: "Saturday", type: "rest", label: "Day 1 — Inflammation Management",
-            sessions: [
-              { name: "Piriformis release with ball — do now and again tonight" },
-              { name: "Glute release — all 3 rounds today" },
-              { name: "Hollow hold — 3×30s barefoot" },
-              { name: "Foot exercises: short foot, big toe press-downs, towel scrunches" },
-              { name: "Heat pad on sit-bone/glute area: 15–20 min (NOT ice — ice aggravates nerve irritation). Do piriformis release right after while tissue is warm." },
-            ],
-            notes: "NO bike. NO sitting on hard surfaces. Use a cushion with coccyx cutout or sit on folded towel offset to thighs. Do NOT stretch hamstrings — pulls directly on ischial tuberosity. Gentle walking is fine.",
-          },
-          {
-            day: "Sunday", type: "rest", label: "Day 2 — Rest + Physio Only",
-            sessions: [
-              { name: "Full daily physio (hollow hold, piriformis, glute release, foot exercises)" },
-              { name: "Assess sit-bone after sleep — is inflammation settling?" },
-              { name: "Heat pad 15–20 min on glute/sit-bone area if still sensitive. NO ice on nerve irritation." },
-              { name: "Gentle 15 min walk if feeling okay", zone: "Z1" },
-            ],
-            notes: "If sit-bone is calming down, you're on track for Monday. If still very irritated, we adjust Monday to pure upper body or pool work. HEAT not ice for all nerve-related flare-ups throughout this program.",
-          },
-          {
-            day: "Monday", type: "conditioning", label: "Standing Bike Intervals",
-            hrTarget: "RPE 8–9 during sprints (no H10 yet — use perceived effort)",
-            sessions: [
-              { name: "Warm-up: 5 min standing pedal, easy pace", zone: "RPE 4" },
-              { name: "8×10s standing sprints / 50s easy standing pedal", zone: "RPE 8–9" },
-              { name: "Cool-down: 5 min easy", zone: "RPE 2–3" },
-            ],
-            notes: "Stay standing the entire time. If sit-bone flares even standing, switch to elliptical. No H10 yet — use RPE: sprints should feel 8–9/10 (can barely talk), easy pedal 4/10 (conversational).",
-            physio: ["Movement Prep: Ankle hops, A-skip, B-skip, Carioca (3×50ft each, 90s rest). CUE: focus on L ankle control on all landings."],
-          },
-          {
-            day: "Tuesday", type: "strength", label: "Lateral Chain Strength",
-            sessions: [
-              { name: "Adduction plank, long lever — 3×45–60s" },
-              { name: "DB 1-leg RDL — 3×8 (single 18lb DB, 5s eccentric) — avoid deep hamstring stretch", zone: "Controlled" },
-              { name: "Stabilization lunge — 3×6" },
-              { name: "Adductor slide (towel) — 3×8" },
-              { name: "Side lunges — 3×6" },
-            ],
-            notes: "On 1-leg RDL: limit hip hinge depth to avoid aggravating ischial tuberosity. Stop before you feel the sit-bone stretch. Stabilization lunge is also your L ankle proprioception builder — focus on controlling the ankle on every rep.",
-          },
-          {
-            day: "Wednesday", type: "rest", label: "Rest + Daily Physio Only",
-            sessions: [],
-            notes: "Daily physio only. Piriformis release and glute release are especially important today.",
-          },
-          {
-            day: "Thursday", type: "conditioning", label: "Aerobic Base (No Seat)",
-            hrTarget: "RPE 4–5 throughout (conversational pace)",
-            sessions: [
-              { name: "30 min elliptical or standing bike at conversational pace", zone: "RPE 4–5" },
-              { name: "If using pool: 30 min aqua jogging (excellent for nerve recovery)", zone: "RPE 4–5" },
-            ],
-            notes: "Priority is time on feet with zero sit-bone pressure. Elliptical or pool are ideal. No H10 yet — you should be able to hold a full conversation throughout.",
-            physio: ["Movement Prep: Ankle hops, A-skip, B-skip, Carioca (3×50ft each, 90s rest). CUE: focus on L ankle control on all landings."],
-          },
-          {
-            day: "Friday", type: "strength", label: "Lateral Chain + Hip Stability",
-            sessions: [
-              { name: "Adduction plank, long lever — 3×45–60s" },
-              { name: "DB 1-leg RDL — 3×8 (single 18lb DB, 5s eccentric) — controlled depth" },
-              { name: "Stabilization lunge — 3×6" },
-              { name: "Adductor slide (towel) — 3×8" },
-              { name: "Side lunges — 3×6" },
-              { name: "Single leg hip thrust — 3×6 (bodyweight, weekly, do it today)" },
-              { name: "Single-leg calf raises — 3×15 each leg, straight knee + bent knee (bodyweight, 3s eccentric). Baseline: 23 to failure. Wall for balance. Bent-knee is extra important on LEFT — soleus acts as dynamic ankle stabilizer." },
-            ],
-            notes: "Add hip thrust this day. Keep it controlled — don't bridge into hyperextension.",
-          },
-          {
-            day: "Saturday", type: "conditioning", label: "Walk/Jog Introduction",
-            hrTarget: "RPE 3–5 (easy jog, can talk in full sentences)",
-            sessions: [
-              { name: "5 min walk warm-up", zone: "RPE 2–3" },
-              { name: "4×(2 min jog / 2 min walk)", zone: "RPE 4–5" },
-              { name: "5 min walk cool-down", zone: "RPE 2" },
-            ],
-            notes: "First running exposure. Keep jog very easy. Monitor knees (PTFJ) and sit-bone. Stop if either flares. ORTHOTICS IN for all running. Cue 'push ground away' not 'toe off' to protect plantar plate.",
-            physio: ["Movement Prep: Ankle hops, A-skip, B-skip, Carioca (3×50ft each, 90s rest) — do these BEFORE the jog as warm-up. Keep shoes + orthotics on for all drills."],
-          },
-          {
-            day: "Sunday", type: "rest", label: "Full Rest — End of Week 1",
-            sessions: [],
-            notes: "Daily physio only. Assess: how does the sit-bone feel after a full week? How are the knees? Compare to last Saturday.",
-          },
+  // WEEK 1
+  weeks.push({
+    number: 1,
+    phase: "Base + Nerve Recovery",
+    focus: "Establish routine, protect sit-bone, build aerobic base without bike seat",
+    progressionGate: "Ischial tuberosity pain not worsening. Can complete all physio exercises without flare-up.",
+    days: [
+      {
+        day: "Saturday",
+        type: "rest",
+        label: "Day 1 — Inflammation Management",
+        sessions: [
+          { name: "Piriformis release with ball — do now and again tonight" },
+          { name: "Glute release — all 3 rounds today" },
+          { name: "Hollow hold — 3×30s barefoot" },
+          { name: "Foot exercises: short foot, big toe press-downs, towel scrunches" },
+          { name: "Heat pad on sit-bone/glute area: 15–20 min (NOT ice — ice aggravates nerve irritation). Do piriformis release right after while tissue is warm." },
         ],
-      });
-
-      // WEEK 2
-      weeks.push({
-        number: 2, phase: "Base + Nerve Recovery",
-        focus: "Progress standing intervals, extend jog duration, continue nerve recovery",
-        progressionGate: "Sit-bone pain stable or improving. Knees tolerated walk/jog without PTFJ flare.",
-        days: [
-          { day: "Monday", type: "conditioning", label: "Standing Bike Intervals",
-            hrTarget: "RPE 8–9 during sprints (H10 may arrive this week — switch to HR zones when it does)",
-            sessions: [
-              { name: "Warm-up: 5 min standing pedal", zone: "RPE 4" },
-              { name: "10×10s standing sprints / 50s recovery", zone: "RPE 8–9" },
-              { name: "Cool-down: 5 min easy", zone: "RPE 2–3" },
-            ],
-            notes: "Progressed from 8 to 10 sprints. Full standing throughout. When your H10 arrives: do a 4-min all-out effort to find max HR, then set your Polar zones from that number.",
-            physio: ["Movement Prep: Ankle hops, A-skip, B-skip, Carioca. CUE: L ankle control on all landings."],
-          },
-          { day: "Tuesday", type: "strength", label: "Lateral Chain Strength",
-            sessions: [
-              { name: "Adduction plank, long lever — 3×50–60s (progress hold time)" },
-              { name: "DB 1-leg RDL — 3×10 (single 18lb DB, 5s eccentric)" },
-              { name: "Stabilization lunge — 3×6" },
-              { name: "Adductor slide — 3×8" },
-              { name: "Side lunges — 3×8 (progressed from 6)" },
-            ],
-            notes: "Small progressions in reps. Keep 1-leg RDL depth limited for sit-bone.",
-          },
-          { day: "Wednesday", type: "rest", label: "Rest + Daily Physio", sessions: [],
-            notes: "Piriformis and glute release. Consider gentle nerve flossing if physio has shown you how.",
-          },
-          { day: "Thursday", type: "conditioning", label: "Aerobic Base",
-            hrTarget: "RPE 4–5 (or Z2 if H10 has arrived)",
-            sessions: [
-              { name: "35 min elliptical or pool at steady conversational pace", zone: "RPE 4–5 / Z2" },
-            ],
-            notes: "Extend duration by 5 min from last week. Try seated bike briefly (5 min) at end to test tolerance. If H10 has arrived, do your max HR test before this session.",
-            physio: ["Movement Prep drills"],
-          },
-          { day: "Friday", type: "strength", label: "Lateral Chain + Hip Thrust",
-            sessions: [
-              { name: "Adduction plank — 3×60s" },
-              { name: "DB 1-leg RDL — 3×10 (single 18lb DB, 5s eccentric)" },
-              { name: "Stabilization lunge — 3×6" },
-              { name: "Adductor slide — 3×8" },
-              { name: "Side lunges — 3×8" },
-              { name: "Single leg hip thrust — 3×6 (bodyweight)" },
-              { name: "Single-leg calf raises — 3×15 each, straight + bent knee (bodyweight, 3s eccentric)" },
-            ],
-          },
-          { day: "Saturday", type: "conditioning", label: "Walk/Jog Progression",
-            hrTarget: "RPE 4–5 (or Z1–2 if H10 arrived)",
-            sessions: [
-              { name: "5 min walk", zone: "RPE 2–3" },
-              { name: "5×(2 min jog / 90s walk)", zone: "RPE 4–5" },
-              { name: "5 min walk cool-down", zone: "RPE 2" },
-            ],
-            notes: "More intervals, shorter rest. Total jog time: 10 min (up from 8).",
-            physio: ["Movement Prep before jog"],
-          },
-          { day: "Sunday", type: "rest", label: "Full Rest", sessions: [],
-            notes: "Weekly assessment: sit-bone status, knee response to jogging, overall energy.",
-          },
+        notes: "NO bike. NO sitting on hard surfaces. Use a cushion with coccyx cutout or sit on folded towel offset to thighs. Do NOT stretch hamstrings — pulls directly on ischial tuberosity. Gentle walking is fine.",
+      },
+      {
+        day: "Sunday",
+        type: "rest",
+        label: "Day 2 — Rest + Physio Only",
+        sessions: [
+          { name: "Full daily physio (hollow hold, piriformis, glute release, foot exercises)" },
+          { name: "Assess sit-bone after sleep — is inflammation settling?" },
+          { name: "Heat pad 15–20 min on glute/sit-bone area if still sensitive. NO ice on nerve irritation." },
+          { name: "Gentle 15 min walk if feeling okay", zone: "Z1" },
         ],
-      });
-
-      // WEEK 3
-      weeks.push({
-        number: 3, phase: "Base + Nerve Recovery",
-        focus: "Test seated bike, extend running, introduce longer sprint intervals",
-        progressionGate: "Can tolerate 10+ min seated bike. Jog 15 min continuous without PTFJ or sit-bone flare. Ready for Phase 2.",
-        days: [
-          { day: "Monday", type: "conditioning", label: "Interval Progression",
-            hrTarget: "Z4–5",
-            sessions: [
-              { name: "Warm-up: 5 min", zone: "Z2" },
-              { name: "10×10s sprints / 50s recovery (standing)", zone: "Z5" },
-              { name: "Rest 3 min, then 3×30s hard efforts / 90s recovery", zone: "Z4" },
-              { name: "Cool-down: 5 min", zone: "Z1" },
-            ],
-            notes: "First introduction of 30s intervals. These build lactate tolerance needed for match play.",
-            physio: ["Movement Prep drills"],
-          },
-          { day: "Tuesday", type: "strength", label: "Lateral Chain — Progress Load",
-            sessions: [
-              { name: "Adduction plank — 3×60s" },
-              { name: "DB 1-leg RDL — 3×10 (single 18lb DB, 5s eccentric — progress depth if sit-bone allows)" },
-              { name: "Stabilization lunge — 3×8 (progressed)" },
-              { name: "Adductor slide — 3×10" },
-              { name: "Side lunges — 3×8 with single 18lb DB goblet hold" },
-              { name: "Single-leg calf raises — 3×15 each, straight + bent knee (bodyweight, 3s eccentric)" },
-            ],
-          },
-          { day: "Wednesday", type: "rest", label: "Rest + Daily Physio", sessions: [] },
-          { day: "Thursday", type: "conditioning", label: "Seated Bike Test + Aerobic",
-            hrTarget: "Z2",
-            sessions: [
-              { name: "15 min seated bike at Z2 — assess sit-bone tolerance", zone: "Z2" },
-              { name: "If tolerated: continue to 35 min total", zone: "Z2" },
-              { name: "If not tolerated: switch to elliptical for remaining time", zone: "Z2" },
-            ],
-            notes: "This is the key test. If you can sit for 15+ min, we're on track to use the bike normally going forward.",
-            physio: ["Movement Prep drills"],
-          },
-          { day: "Friday", type: "strength", label: "Lateral Chain + Hip Thrust",
-            sessions: [
-              { name: "Full strength circuit (same as Tuesday + single leg hip thrust 3×8 bodyweight)" },
-              { name: "Single-leg calf raises — 3×15 each, straight + bent knee (bodyweight, 3s eccentric)" },
-            ],
-            notes: "Hip thrust progressed to 8 reps.",
-          },
-          { day: "Saturday", type: "conditioning", label: "Continuous Jog Attempt",
-            hrTarget: "Z2",
-            sessions: [
-              { name: "Movement Prep drills as warm-up" },
-              { name: "15 min continuous jog at Z2", zone: "Z2" },
-              { name: "5 min walk", zone: "Z1" },
-              { name: "4×50m strides at 70% effort", zone: "Z3" },
-            ],
-            notes: "First continuous jog. Stay slow. The strides at the end introduce your legs to faster turnover without full sprinting.",
-          },
-          { day: "Sunday", type: "rest", label: "Full Rest — Phase Gate Assessment", sessions: [],
-            notes: "Check all three gates before moving to Phase 2. If sit-bone still can't handle the bike, extend Phase 1 by a week and adjust.",
-          },
+        notes: "If sit-bone is calming down, you're on track for Monday. If still very irritated, we adjust Monday to pure upper body or pool work. HEAT not ice for all nerve-related flare-ups throughout this program.",
+      },
+      {
+        day: "Monday",
+        type: "conditioning",
+        label: "Standing Bike Intervals",
+        hrTarget: "RPE 8–9 during sprints (no H10 yet — use perceived effort)",
+        sessions: [
+          { name: "Warm-up: 5 min standing pedal, easy pace", zone: "RPE 4" },
+          { name: "8×10s standing sprints / 50s easy standing pedal", zone: "RPE 8–9" },
+          { name: "Cool-down: 5 min easy", zone: "RPE 2–3" },
         ],
-      });
-
-      // WEEK 4
-      weeks.push({
-        number: 4, phase: "Transition to Running",
-        focus: "Reintroduce seated bike if tolerated, first running intervals, increase lateral chain demand",
-        progressionGate: "Can jog 20 min without issue. Running intervals don't aggravate PTFJ.",
-        days: [
-          { day: "Monday", type: "conditioning", label: "Bike Intervals (Seated if tolerated)",
-            hrTarget: "Z4–5",
-            sessions: [
-              { name: "Warm-up: 8 min easy spin", zone: "Z2" },
-              { name: "10×10s sprints / 50s recovery", zone: "Z5" },
-              { name: "3 min rest" },
-              { name: "4×30s hard / 90s recovery", zone: "Z4" },
-              { name: "Cool-down: 5 min", zone: "Z1" },
-            ],
-            notes: "If seated is okay, great. If not, stay standing or use elliptical intervals.",
-            physio: ["Movement Prep drills"],
-          },
-          { day: "Tuesday", type: "strength", label: "Lateral Chain Strength",
-            sessions: [
-              { name: "Adduction plank — 3×60s" },
-              { name: "DB 1-leg RDL — 3×12 (18lb each hand = 36lb total, 5s eccentric)" },
-              { name: "Stabilization lunge — 3×8 (single 18lb DB goblet hold)" },
-              { name: "Adductor slide — 3×10" },
-              { name: "Side lunges — 3×8 with 18lb DB each hand" },
-            ],
-          },
-          { day: "Wednesday", type: "rest", label: "Rest + Daily Physio", sessions: [] },
-          { day: "Thursday", type: "conditioning", label: "First Running Intervals",
-            hrTarget: "Z3–4",
-            sessions: [
-              { name: "Movement Prep drills" },
-              { name: "10 min jog warm-up", zone: "Z2" },
-              { name: "6×100m at 75% effort / walk back recovery", zone: "Z3–4" },
-              { name: "10 min jog cool-down", zone: "Z2" },
-            ],
-            notes: "First real running intervals. 75% effort, not sprinting. Focus on smooth mechanics. Monitor PTFJ — any lateral knee pain, stop and walk.",
-            physio: ["Movement Prep before, stretching after"],
-          },
-          { day: "Friday", type: "strength", label: "Lateral Chain + Hip Thrust",
-            sessions: [
-              { name: "Full strength circuit + single leg hip thrust 3×8 (18lb DB on hip)" },
-              { name: "Add: single-leg calf raises 3×12 each with 18lb DB — straight + bent knee, 3s eccentric. Hold DB in one hand, wall for balance with other." },
-            ],
-            notes: "Adding calf raises to protect Achilles as running volume increases.",
-          },
-          { day: "Saturday", type: "conditioning", label: "Tempo Jog",
-            hrTarget: "Z2–3",
-            sessions: [
-              { name: "Movement Prep drills" },
-              { name: "20 min continuous jog", zone: "Z2" },
-              { name: "5 min at Z3 (comfortably hard)", zone: "Z3" },
-              { name: "5 min walk cool-down", zone: "Z1" },
-            ],
-            notes: "Building toward sustained moderate effort. The 5 min at Z3 simulates a passage of play. After session: 5 min barefoot walking on grass (first barefoot exposure beyond daily physio). Orthotics stay in for all running.",
-          },
-          { day: "Sunday", type: "rest", label: "Full Rest", sessions: [] },
+        notes: "Stay standing the entire time. If sit-bone flares even standing, switch to elliptical. No H10 yet — use RPE: sprints should feel 8–9/10 (can barely talk), easy pedal 4/10 (conversational).",
+        physio: ["Movement Prep: Ankle hops, A-skip, B-skip, Carioca (3×50ft each, 90s rest). CUE: focus on L ankle control on all landings."],
+      },
+      {
+        day: "Tuesday",
+        type: "strength",
+        label: "Lateral Chain Strength + H10 Setup",
+        sessions: [
+          { name: "🎉 H10 arrives today — charge it, pair with Polar app, wear it for every session from now on" },
+          { name: "Adduction plank, long lever — 3×45–60s. MONITOR: if inguinal groin area flares, reduce hold time or skip." },
+          { name: "DB 1-leg RDL — 3×8 (single 18lb DB, 5s eccentric) — LEFT SIDE: stop at torso parallel (FAI impingement limit + sit-bone). RIGHT SIDE: stop before sit-bone stretch.", zone: "Controlled" },
+          { name: "Stabilization lunge — 3×6" },
+          { name: "Adductor slide (towel) — 3×8. MONITOR: if groin nerve tingling increases, reduce range or skip." },
+          { name: "Side lunges — 3×6. LEFT SIDE: don't sink as deep (FAI — deep flexion + adduction compresses anterior hip)." },
         ],
-      });
-
-      // WEEK 5
-      weeks.push({
-        number: 5, phase: "Transition to Running",
-        focus: "Increase running interval intensity, introduce shuttle runs, continue lateral chain progression",
-        progressionGate: "Can complete 6×200m without PTFJ flare. HR recovers to Z2 within 90s after sprints.",
-        days: [
-          { day: "Monday", type: "conditioning", label: "Bike Intervals",
-            hrTarget: "Z4–5",
-            sessions: [
-              { name: "Warm-up: 8 min", zone: "Z2" },
-              { name: "6×30s hard / 60s recovery", zone: "Z4–5" },
-              { name: "3 min rest" },
-              { name: "2×3 min at 85% max HR / 2 min recovery", zone: "Z4" },
-              { name: "Cool-down: 5 min", zone: "Z1" },
-            ],
-            notes: "First 3-minute efforts — these build the sustained high-output capacity for match play.",
-            physio: ["Movement Prep drills"],
-          },
-          { day: "Tuesday", type: "strength", label: "Lateral Chain — Increase Challenge",
-            sessions: [
-              { name: "Adduction plank — 3×60s (add leg lift if able)" },
-              { name: "DB 1-leg RDL — 3×12 (18lb each hand = 36lb total, 5s eccentric — home max)" },
-              { name: "Stabilization lunge — 3×8 (single 18lb DB goblet hold)" },
-              { name: "Adductor slide — 3×12" },
-              { name: "Side lunges — 3×10 with 18lb DB each hand (home max)" },
-              { name: "Single-leg calf raises — 3×12 each with 18lb DB, straight + bent knee, 3s eccentric" },
-            ],
-          },
-          { day: "Wednesday", type: "rest", label: "Rest + Daily Physio", sessions: [] },
-          { day: "Thursday", type: "conditioning", label: "Running Intervals — 200m",
-            hrTarget: "Z4",
-            sessions: [
-              { name: "Movement Prep drills" },
-              { name: "10 min jog warm-up", zone: "Z2" },
-              { name: "6×200m at 80% / jog back recovery", zone: "Z4" },
-              { name: "5 min walk, then 4×short shuttle (5-10-15m)", zone: "Z4" },
-              { name: "10 min jog cool-down", zone: "Z2" },
-            ],
-            notes: "First shuttle runs. These train the deceleration and direction change that kills you in matches. Start conservatively with the PTFJ — no sharp cutting yet, just forward/backward shuttles.",
-          },
-          { day: "Friday", type: "strength", label: "Full Strength + Hip Thrust",
-            sessions: [
-              { name: "Full circuit + single leg hip thrust 3×8 (18lb DB on hip)" },
-              { name: "Single-leg calf raises 3×12 each with 18lb DB, 3s eccentric (straight + bent knee)" },
-            ],
-          },
-          { day: "Saturday", type: "conditioning", label: "Tempo Run",
-            hrTarget: "Z2–3",
-            sessions: [
-              { name: "Movement Prep drills" },
-              { name: "25 min continuous run: 15 min Z2, 8 min Z3, 2 min Z2", zone: "Z2–3" },
-              { name: "6×50m strides at 80%", zone: "Z3–4" },
-            ],
-            notes: "Building sustained running capacity. The Z3 block should feel like match-pace jogging. Post-session: 5 min barefoot grass walk. Notice how your big toe engages differently without orthotics.",
-          },
-          { day: "Sunday", type: "rest", label: "Full Rest", sessions: [] },
+        notes: "On 1-leg RDL: LEFT side has two depth limits — sit-bone AND anterior hip impingement. Stop at torso parallel, never chase depth. RIGHT side: sit-bone is the only limiter. Groin nerve: if the warm/tingly sensation increases during adductor work, stop those exercises and note it. Stabilization lunge is also your L ankle proprioception builder — focus on controlling the ankle on every rep.",
+      },
+      {
+        day: "Wednesday",
+        type: "rest",
+        label: "Rest + Daily Physio Only",
+        sessions: [],
+        notes: "Daily physio only. Piriformis release and glute release are especially important today.",
+      },
+      {
+        day: "Thursday",
+        type: "conditioning",
+        label: "Aerobic Base + Max HR Test",
+        hrTarget: "Z2 for aerobic, then ALL-OUT for max HR test",
+        sessions: [
+          { name: "PUT ON H10 — first tracked session" },
+          { name: "20 min elliptical or standing bike at conversational pace", zone: "Z2" },
+          { name: "If using pool: 20 min aqua jogging (excellent for nerve recovery)", zone: "Z2" },
+          { name: "Rest 5 min, then MAX HR TEST: 4-min all-out effort on standing bike or hill run. Last 30s should be absolute max.", zone: "Z5" },
+          { name: "Record your peak HR → set your Polar zones from this number" },
+          { name: "10 min easy cool-down", zone: "Z1" },
         ],
-      });
-
-      // WEEK 6
-      weeks.push({
-        number: 6, phase: "Transition to Running",
-        focus: "Final transition week. Running becomes primary. Introduce lateral shuttles if PTFJ allows.",
-        progressionGate: "Can run 30 min with tempo blocks. Shuttles don't aggravate PTFJ. Ready for soccer-specific work.",
-        days: [
-          { day: "Monday", type: "conditioning", label: "Bike — Aerobic + Intervals",
-            hrTarget: "Z2–4",
-            sessions: [
-              { name: "20 min Z2 seated (active recovery)", zone: "Z2" },
-              { name: "4×30s hard / 60s recovery", zone: "Z4" },
-              { name: "10 min Z2 cool-down", zone: "Z2" },
-            ],
-            notes: "Bike is now a secondary tool. Lighter session to recover from weekend.",
-            physio: ["Movement Prep drills"],
-          },
-          { day: "Tuesday", type: "strength", label: "Lateral Chain + Power Introduction",
-            sessions: [
-              { name: "Full strength circuit (progress all exercises)" },
-              { name: "Add: lateral band walks 3×15 each direction" },
-              { name: "Add: box step-ups 3×8 each leg (bodyweight)" },
-              { name: "Single-leg calf raises 3×12 each with 18lb DB, 3s eccentric (straight + bent knee)" },
-            ],
-            notes: "Introducing lateral band walks and step-ups for more dynamic lateral chain work.",
-          },
-          { day: "Wednesday", type: "rest", label: "Rest + Daily Physio", sessions: [] },
-          { day: "Thursday", type: "conditioning", label: "Running Intervals + Lateral Shuttles",
-            hrTarget: "Z4–5",
-            sessions: [
-              { name: "Movement Prep drills" },
-              { name: "10 min jog warm-up", zone: "Z2" },
-              { name: "8×200m at 80% / jog back recovery", zone: "Z4" },
-              { name: "Rest 3 min" },
-              { name: "6×lateral shuttle (5m each way) — ONLY if PTFJ allows. L ankle: decelerate with control, don't let it collapse inward on direction change.", zone: "Z4" },
-              { name: "8 min jog cool-down", zone: "Z2" },
-            ],
-            notes: "First lateral shuttles. Low intensity. If any PTFJ pain, remove these and stick to forward/back shuttles.",
-          },
-          { day: "Friday", type: "strength", label: "Strength + Hip Thrust",
-            sessions: [{ name: "Full circuit + hip thrust 3×10 (18lb DB on hip) + single-leg calf raises 3×12 each with 18lb DB, 3s eccentric" }],
-          },
-          { day: "Saturday", type: "conditioning", label: "30-Min Tempo Run",
-            hrTarget: "Z2–3",
-            sessions: [
-              { name: "Movement Prep" },
-              { name: "30 min: 10 min Z2, 12 min Z3, 5 min Z2, 3 min Z4", zone: "Z2–4" },
-              { name: "6×50m strides" },
-            ],
-            notes: "Longest run yet. The 3-min Z4 block at the end simulates pressing hard when already fatigued.",
-          },
-          { day: "Sunday", type: "rest", label: "Full Rest — Phase Gate Assessment", sessions: [],
-            notes: "Assess: ready for soccer-specific work? Check PTFJ, sit-bone, and overall fatigue.",
-          },
+        notes: "H10 day! Do the max HR test standing on the bike or on a hill run — NOT seated (sit-bone). The 4-min protocol: start hard, build every minute, last 30 seconds everything you've got. Your peak reading is your max HR. Set Polar zones from this. No more RPE guessing after today.",
+        physio: ["Movement Prep: Ankle hops, A-skip, B-skip, Carioca (3×50ft each, 90s rest). CUE: focus on L ankle control on all landings."],
+      },
+      {
+        day: "Friday",
+        type: "strength",
+        label: "Lateral Chain + Hip Stability",
+        sessions: [
+          { name: "Adduction plank, long lever — 3×45–60s. Skip if groin flared Tuesday." },
+          { name: "DB 1-leg RDL — 3×8 (single 18lb DB, 5s eccentric) — LEFT: torso parallel max (FAI). RIGHT: stop before sit-bone stretch." },
+          { name: "Stabilization lunge — 3×6" },
+          { name: "Adductor slide (towel) — 3×8. Skip if groin flared Tuesday." },
+          { name: "Side lunges — 3×6. LEFT: shallower depth (FAI)." },
+          { name: "Single leg hip thrust — 3×6 (bodyweight, weekly, do it today)" },
+          { name: "Single-leg calf raises — 3×15 each leg, straight knee + bent knee (bodyweight, 3s eccentric). Baseline: 23 to failure. Wall for balance. Bent-knee is extra important on LEFT — soleus acts as dynamic ankle stabilizer." },
         ],
-      });
-
-      // WEEK 7
-      weeks.push({
-        number: 7, phase: "Soccer-Specific",
-        focus: "Match simulation introduction, agility work, pickup games if available",
-        progressionGate: "Can sustain 30 min of mixed-intensity running. Lateral movements tolerated.",
-        days: [
-          { day: "Monday", type: "conditioning", label: "Match Simulation Lite",
-            hrTarget: "Z2–5 (mixed)",
-            sessions: [
-              { name: "Movement Prep" },
-              { name: "2×15 min blocks:", zone: "mixed" },
-              { name: "  — Jog 2–3 min at Z2", zone: "Z2" },
-              { name: "  — Sprint 10–15s every 2–3 min", zone: "Z5" },
-              { name: "  — Walk 30s recovery after each sprint", zone: "Z1" },
-              { name: "3 min rest between blocks" },
-            ],
-            notes: "This is the start of match simulation. The random sprint pattern mimics game demands.",
-          },
-          { day: "Tuesday", type: "strength", label: "Lateral Chain + Power",
-            sessions: [
-              { name: "GYM: Full strength circuit — heavier DBs (30lb+) for RDLs, lunges, side lunges. Progress loads." },
-              { name: "Lateral band walks 3×15" },
-              { name: "Box step-ups 3×10 (18lb DB each hand)" },
-              { name: "Add: split squat jumps 3×6 (low height, controlled landing) — SKIP if PTFJ reacts. Land softly through midfoot. Monitor L ankle stability on every landing — if it rolls or wobbles, reduce height." },
-              { name: "GYM: Smith machine calf raises — 3×8–10, heavy (60lb+ working up), 4s eccentric, straight + bent knee. This is where tendon resilience gets built." },
-            ],
-            notes: "Introducing plyometric element with split squat jumps. These must be pain-free. GYM DAY — Smith machine for heavy calf work. Use the gym for heavier lunges and RDLs too while you're there.",
-          },
-          { day: "Wednesday", type: "rest", label: "Rest + Daily Physio", sessions: [] },
-          { day: "Thursday", type: "conditioning", label: "Agility + Sprint Work",
-            hrTarget: "Z4–5",
-            sessions: [
-              { name: "Movement Prep" },
-              { name: "10 min jog warm-up", zone: "Z2" },
-              { name: "10×40m sprints / walk back recovery", zone: "Z5" },
-              { name: "Rest 3 min" },
-              { name: "Agility circuit: 4×(forward sprint 10m, lateral shuffle 5m, backpedal 10m, sprint 10m). L ankle: control every direction change.", zone: "Z4–5" },
-              { name: "8 min jog cool-down", zone: "Z2" },
-            ],
-            notes: "Full multi-directional work. This is where PTFJ management matters most. Lateral shuffle, not cutting. Keep orthotics in. Consider taping or a lightweight brace on L ankle for agility work from this week onward — fatigue + hypermobility + direction changes is the highest ankle-roll risk scenario. If barefoot grass walking has been going well, try Movement Prep drills barefoot on grass as warm-up (not the sprints).",
-          },
-          { day: "Friday", type: "conditioning", label: "Active Recovery Bike",
-            hrTarget: "Z1–2",
-            sessions: [{ name: "25 min easy bike spin", zone: "Z1–2" }],
-            notes: "Recovery day before weekend push. Keep it genuinely easy.",
-          },
-          { day: "Saturday", type: "conditioning", label: "Pickup Game or Long Match Sim",
-            hrTarget: "Z2–5",
-            sessions: [
-              { name: "Option A: Pickup game (aim for 45–60 min of play)" },
-              { name: "Option B: Solo match sim — 2×20 min with mixed sprints throughout, 5 min half-time" },
-            ],
-            notes: "If you can find a pickup game, this is the single best thing you can do for match fitness. The H10 data from a real game will be your benchmark. L ankle: tape or brace for all game play from now on.",
-          },
-          { day: "Sunday", type: "rest", label: "Full Rest", sessions: [] },
+        notes: "Add hip thrust this day. Keep it controlled — don't bridge into hyperextension. LEFT RDL depth limit is permanent (FAI) — don't test it.",
+      },
+      {
+        day: "Saturday",
+        type: "conditioning",
+        label: "Walk/Jog Introduction",
+        hrTarget: "Z1–2 (easy jog, can talk in full sentences)",
+        sessions: [
+          { name: "5 min walk warm-up", zone: "Z1" },
+          { name: "4×(2 min jog / 2 min walk)", zone: "Z2" },
+          { name: "5 min walk cool-down", zone: "Z1" },
         ],
-      });
+        notes: "First running exposure. H10 on — your jog should stay in Z2. Monitor knees (PTFJ) and sit-bone. Stop if either flares. ORTHOTICS IN for all running. Cue 'push ground away' not 'toe off' to protect plantar plate.",
+        physio: ["Movement Prep: Ankle hops, A-skip, B-skip, Carioca (3×50ft each, 90s rest) — do these BEFORE the jog as warm-up. Keep shoes + orthotics on for all drills."],
+      },
+      {
+        day: "Sunday",
+        type: "rest",
+        label: "Full Rest — End of Week 1",
+        sessions: [],
+        notes: "Daily physio only. Assess: how does the sit-bone feel after a full week? How are the knees? Compare to last Saturday.",
+      },
+    ],
+  });
 
-      // WEEK 8
-      weeks.push({
-        number: 8, phase: "Soccer-Specific",
-        focus: "Extend match simulation duration, increase sprint volume, progress agility complexity",
-        progressionGate: "Can sustain 2×20 min match sim. Average HR in game/sim at 75–80% max.",
-        days: [
-          { day: "Monday", type: "conditioning", label: "Match Simulation — Extended",
-            hrTarget: "Z2–5",
-            sessions: [
-              { name: "Movement Prep" },
-              { name: "2×20 min blocks: jog with sprint bursts every 2 min (10–20s)", zone: "mixed" },
-              { name: "5 min half-time walk" },
-            ],
-            notes: "Progression: longer blocks, more frequent sprints.",
-          },
-          { day: "Tuesday", type: "strength", label: "Lateral Chain + Power",
-            sessions: [
-              { name: "GYM: Full strength circuit — heavier loads than home. Progress RDLs, lunges, side lunges with heavier DBs or barbell." },
-              { name: "Split squat jumps 3×8 (if tolerated) — monitor L ankle control on landing" },
-              { name: "Lateral bounds 3×6 each side (low, controlled) — land midfoot. L ankle: focus on sticking the landing, no wobble. These are the highest ankle-roll risk exercise in the program." },
-              { name: "GYM: Smith machine calf raises — 3×8–10, heavy, 4s eccentric (straight + bent knee). Progress weight from Week 7." },
-            ],
-            notes: "Adding lateral bounds — a key soccer movement pattern. Stay low, land soft. GYM DAY for heavy calf work.",
-          },
-          { day: "Wednesday", type: "rest", label: "Rest + Daily Physio", sessions: [] },
-          { day: "Thursday", type: "conditioning", label: "Repeated Sprint Ability",
-            hrTarget: "Z4–5",
-            sessions: [
-              { name: "Movement Prep" },
-              { name: "10 min jog", zone: "Z2" },
-              { name: "3 sets of: 6×20m sprint / 20s rest between sprints / 3 min between sets", zone: "Z5" },
-              { name: "Agility circuit × 6 reps" },
-              { name: "10 min jog cool-down", zone: "Z2" },
-            ],
-            notes: "RSA training. This is the most match-specific conditioning you can do. The short rest between sprints simulates game situations where you sprint, barely recover, then sprint again. L ankle: if you feel it getting sloppy when fatigued, stop the set early. A rolled ankle now kills the program.",
-          },
-          { day: "Friday", type: "conditioning", label: "Active Recovery",
-            hrTarget: "Z1–2",
-            sessions: [{ name: "25 min easy bike or walk", zone: "Z1–2" }],
-          },
-          { day: "Saturday", type: "conditioning", label: "Pickup Game or Match Sim",
-            hrTarget: "Z2–5",
-            sessions: [{ name: "60–75 min of game play or 2×25 min solo match sim" }],
-            notes: "Push the duration. Compare this week's H10 data to last week's.",
-          },
-          { day: "Sunday", type: "rest", label: "Full Rest", sessions: [] },
+  // WEEK 2
+  weeks.push({
+    number: 2,
+    phase: "Base + Nerve Recovery",
+    focus: "Progress standing intervals, extend jog duration, continue nerve recovery",
+    progressionGate: "Sit-bone pain stable or improving. Knees tolerated walk/jog without PTFJ flare.",
+    days: [
+      {
+        day: "Monday",
+        type: "conditioning",
+        label: "Standing Bike Intervals",
+        hrTarget: "Z4–5 during sprints",
+        sessions: [
+          { name: "Warm-up: 5 min standing pedal", zone: "Z2" },
+          { name: "10×10s standing sprints / 50s recovery", zone: "Z5" },
+          { name: "Cool-down: 5 min easy", zone: "Z1" },
         ],
-      });
-
-      // WEEK 9
-      weeks.push({
-        number: 9, phase: "Soccer-Specific",
-        focus: "Peak training load week. Longest match simulation. Maximum intensity.",
-        progressionGate: "Can sustain 2×30 min match sim at 80%+ average HR. Ready for match prep phase.",
-        days: [
-          { day: "Monday", type: "conditioning", label: "Match Simulation — Peak",
-            hrTarget: "Z2–5",
-            sessions: [
-              { name: "Movement Prep" },
-              { name: "2×30 min: jog with sprint bursts every 90s–2 min", zone: "mixed" },
-              { name: "5 min half-time" },
-            ],
-            notes: "This is the hardest conditioning session of the program. 60 min of mixed-intensity work.",
-          },
-          { day: "Tuesday", type: "strength", label: "Maintenance Strength",
-            sessions: [
-              { name: "GYM: Full strength circuit — maintain Week 8 loads on all exercises, don't increase" },
-              { name: "Plyometrics: split squat jumps + lateral bounds (3×8 each)" },
-              { name: "GYM: Smith machine calf raises — maintain Week 8 heavy loads, 3×8–10, 4s eccentric. Don't increase." },
-            ],
-            notes: "Strength is now maintenance mode. The priority is conditioning.",
-          },
-          { day: "Wednesday", type: "rest", label: "Rest + Daily Physio", sessions: [] },
-          { day: "Thursday", type: "conditioning", label: "Peak RSA Session",
-            hrTarget: "Z4–5",
-            sessions: [
-              { name: "Movement Prep" },
-              { name: "10 min jog", zone: "Z2" },
-              { name: "4 sets of: 6×20m sprint / 20s rest / 3 min between sets", zone: "Z5" },
-              { name: "Agility circuit × 8 reps" },
-              { name: "8 min jog cool-down", zone: "Z2" },
-            ],
-            notes: "Peak sprint volume. 4 sets instead of 3. If you feel crushed by set 3, drop set 4. L ankle: if control deteriorates in later sets, stop agility work and jog out the rest. Tape/brace on for all agility.",
-          },
-          { day: "Friday", type: "conditioning", label: "Active Recovery",
-            hrTarget: "Z1",
-            sessions: [{ name: "20 min very easy bike or walk", zone: "Z1" }],
-          },
-          { day: "Saturday", type: "conditioning", label: "Pickup Game — Full Duration",
-            hrTarget: "Z2–5",
-            sessions: [
-              { name: "Full pickup game aiming for 75–90 min" },
-              { name: "Or 2×35 min solo match sim" },
-            ],
-            notes: "Try to play as close to full game duration as possible. This is your fitness test.",
-          },
-          { day: "Sunday", type: "rest", label: "Full Rest", sessions: [] },
+        notes: "Progressed from 8 to 10 sprints. Full standing throughout. H10 on — compare your sprint HR peaks to your max from Thursday's test.",
+        physio: ["Movement Prep: Ankle hops, A-skip, B-skip, Carioca. CUE: L ankle control on all landings."],
+      },
+      {
+        day: "Tuesday",
+        type: "strength",
+        label: "Lateral Chain Strength",
+        sessions: [
+          { name: "Adduction plank, long lever — 3×50–60s (progress hold time)" },
+          { name: "DB 1-leg RDL — 3×10 (single 18lb DB, 5s eccentric). LEFT: torso parallel max (FAI). RIGHT: sit-bone limit." },
+          { name: "Stabilization lunge — 3×6" },
+          { name: "Adductor slide — 3×8" },
+          { name: "Side lunges — 3×8 (progressed from 6). LEFT: shallower depth (FAI)." },
         ],
-      });
-
-      // WEEK 10
-      weeks.push({
-        number: 10, phase: "Match Prep & Taper",
-        focus: "Reduce volume, maintain intensity, sharpen for match day",
-        progressionGate: "Feeling fresh, not fatigued. Resting HR stable. Confidence in 90-min capacity.",
-        days: [
-          { day: "Monday", type: "conditioning", label: "Reduced Match Sim",
-            hrTarget: "Z2–5",
-            sessions: [
-              { name: "Movement Prep" },
-              { name: "2×20 min match sim (reduced from 2×30)", zone: "mixed" },
-            ],
-            notes: "Volume drops but intensity stays. You should feel faster and sharper.",
-          },
-          { day: "Tuesday", type: "strength", label: "Maintenance Strength (Reduced)",
-            sessions: [
-              { name: "HOME: Abbreviated strength circuit with 18lb DBs — 2 sets instead of 3. Maintain, don't load heavy." },
-              { name: "Plyometrics: 2×6 each" },
-              { name: "Single-leg calf raises 3×10 each with 36lb (both DBs combined), deficit off step, 4s eccentric. Maintenance." },
-            ],
-            notes: "Keeping the movement patterns alive without creating fatigue.",
-          },
-          { day: "Wednesday", type: "rest", label: "Rest + Daily Physio", sessions: [] },
-          { day: "Thursday", type: "conditioning", label: "Sharp Sprints",
-            hrTarget: "Z4–5",
-            sessions: [
-              { name: "Movement Prep" },
-              { name: "10 min jog", zone: "Z2" },
-              { name: "2 sets of: 6×20m sprint / 30s rest / 3 min between sets", zone: "Z5" },
-              { name: "Light agility circuit × 4" },
-              { name: "10 min jog", zone: "Z2" },
-            ],
-            notes: "Reduced sets, full recovery. Maintaining speed without accumulating fatigue.",
-          },
-          { day: "Friday", type: "rest", label: "Rest or Very Light Movement",
-            sessions: [{ name: "Optional: 15 min walk", zone: "Z1" }],
-          },
-          { day: "Saturday", type: "conditioning", label: "Pickup Game",
-            hrTarget: "Z2–5",
-            sessions: [{ name: "45–60 min game — don't go all out, save something" }],
-            notes: "Play at 85%. This is a dress rehearsal, not the performance.",
-          },
-          { day: "Sunday", type: "rest", label: "Full Rest", sessions: [] },
+        notes: "Small progressions in reps. LEFT RDL depth limit is permanent — torso parallel, no deeper.",
+      },
+      {
+        day: "Wednesday",
+        type: "rest",
+        label: "Rest + Daily Physio",
+        sessions: [],
+        notes: "Piriformis and glute release. Consider gentle nerve flossing if physio has shown you how.",
+      },
+      {
+        day: "Thursday",
+        type: "conditioning",
+        label: "Aerobic Base",
+        hrTarget: "Z2",
+        sessions: [
+          { name: "35 min elliptical or pool at steady conversational pace", zone: "Z2" },
         ],
-      });
-
-      // WEEK 11
-      weeks.push({
-        number: 11, phase: "Match Prep & Taper",
-        focus: "Final taper. Keep legs fresh. Stay sharp without heavy load.",
-        progressionGate: "YOU'RE MATCH READY. Trust the work you've done.",
-        days: [
-          { day: "Monday", type: "conditioning", label: "Light Match Sim",
-            hrTarget: "Z2–4",
-            sessions: [
-              { name: "Movement Prep" },
-              { name: "15 min match sim at moderate intensity", zone: "Z2–4" },
-              { name: "6×40m strides at 80%", zone: "Z3–4" },
-            ],
-            notes: "Keep the engine ticking. Low volume, moderate intensity.",
-          },
-          { day: "Tuesday", type: "strength", label: "Light Activation",
-            sessions: [
-              { name: "HOME: Abbreviated circuit with 18lb DBs — 2 sets, light. Activation only." },
-              { name: "Single-leg calf raises 2×10 each with 18lb DB, 3s eccentric. Light maintenance only." },
-              { name: "Focus on activation, not loading" },
-            ],
-          },
-          { day: "Wednesday", type: "rest", label: "Rest + Daily Physio", sessions: [] },
-          { day: "Thursday", type: "conditioning", label: "Sharpening Session",
-            hrTarget: "Z4–5",
-            sessions: [
-              { name: "10 min jog", zone: "Z2" },
-              { name: "6×20m sprints with full recovery", zone: "Z5" },
-              { name: "Light agility × 4 reps" },
-              { name: "10 min jog", zone: "Z2" },
-            ],
-            notes: "Last hard session. Short, sharp. You should feel fast.",
-          },
-          { day: "Friday", type: "rest", label: "Rest",
-            sessions: [],
-            notes: "Hydrate, eat well, sleep 8+ hours.",
-          },
-          { day: "Saturday", type: "conditioning", label: "Pre-Match Activation",
-            sessions: [
-              { name: "Movement Prep drills" },
-              { name: "10 min easy jog", zone: "Z2" },
-              { name: "4×30m strides", zone: "Z3" },
-              { name: "Dynamic stretching" },
-            ],
-            notes: "Just enough to feel loose and ready. If match is Sunday, this is your activation day.",
-          },
-          { day: "Sunday", type: "match", label: "⚽ MATCH DAY",
-            sessions: [
-              { name: "Full warm-up with Movement Prep drills" },
-              { name: "Play the full 90 minutes" },
-              { name: "Wear your H10 — this is the data set you've been building toward" },
-            ],
-            notes: "Trust the 11 weeks. Manage your energy — don't sprint everything in the first 15 min. The fitness is there. Orthotics in your boots. L ankle taped or braced. Make sure you've tested this boot+orthotic+tape combo in training before today.",
-          },
+        notes: "Extend duration by 5 min from last week. Try seated bike briefly (5 min) at end to test sit-bone tolerance. H10 on — stay in Z2 throughout.",
+        physio: ["Movement Prep drills"],
+      },
+      {
+        day: "Friday",
+        type: "strength",
+        label: "Lateral Chain + Hip Thrust",
+        sessions: [
+          { name: "Adduction plank — 3×60s" },
+          { name: "DB 1-leg RDL — 3×10 (single 18lb DB, 5s eccentric). LEFT: torso parallel max (FAI)." },
+          { name: "Stabilization lunge — 3×6" },
+          { name: "Adductor slide — 3×8" },
+          { name: "Side lunges — 3×8. LEFT: shallower depth (FAI)." },
+          { name: "Single leg hip thrust — 3×6 (bodyweight)" },
+          { name: "Single-leg calf raises — 3×15 each, straight + bent knee (bodyweight, 3s eccentric)" },
         ],
-      });
+      },
+      {
+        day: "Saturday",
+        type: "conditioning",
+        label: "Walk/Jog Progression",
+        hrTarget: "Z1–2",
+        sessions: [
+          { name: "5 min walk", zone: "Z1" },
+          { name: "5×(2 min jog / 90s walk)", zone: "Z2" },
+          { name: "5 min walk cool-down", zone: "Z1" },
+        ],
+        notes: "More intervals, shorter rest. Total jog time: 10 min (up from 8). H10 on — your jog should stay in Z2.",
+        physio: ["Movement Prep before jog"],
+      },
+      {
+        day: "Sunday",
+        type: "rest",
+        label: "Full Rest",
+        sessions: [],
+        notes: "Weekly assessment: sit-bone status, knee response to jogging, overall energy.",
+      },
+    ],
+  });
 
-      return weeks;
-    }
+  // WEEK 3
+  weeks.push({
+    number: 3,
+    phase: "Base + Nerve Recovery",
+    focus: "Test seated bike, extend running, introduce longer sprint intervals",
+    progressionGate: "Can tolerate 10+ min seated bike. Jog 15 min continuous without PTFJ or sit-bone flare. Ready for Phase 2.",
+    days: [
+      {
+        day: "Monday",
+        type: "conditioning",
+        label: "Interval Progression",
+        hrTarget: "Z4–5",
+        sessions: [
+          { name: "Warm-up: 5 min", zone: "Z2" },
+          { name: "10×10s sprints / 50s recovery (standing)", zone: "Z5" },
+          { name: "Rest 3 min, then 3×30s hard efforts / 90s recovery", zone: "Z4" },
+          { name: "Cool-down: 5 min", zone: "Z1" },
+        ],
+        notes: "First introduction of 30s intervals. These build lactate tolerance needed for match play.",
+        physio: ["Movement Prep drills"],
+      },
+      {
+        day: "Tuesday",
+        type: "strength",
+        label: "Lateral Chain — Progress Load",
+        sessions: [
+          { name: "Adduction plank — 3×60s" },
+          { name: "DB 1-leg RDL — 3×10 (single 18lb DB, 5s eccentric — progress depth on RIGHT if sit-bone allows. LEFT: torso parallel max, FAI limit)" },
+          { name: "Stabilization lunge — 3×8 (progressed)" },
+          { name: "Adductor slide — 3×10" },
+          { name: "Side lunges — 3×8 with single 18lb DB goblet hold. LEFT: shallower depth (FAI)." },
+          { name: "Single-leg calf raises — 3×15 each, straight + bent knee (bodyweight, 3s eccentric)" },
+        ],
+      },
+      { day: "Wednesday", type: "rest", label: "Rest + Daily Physio", sessions: [] },
+      {
+        day: "Thursday",
+        type: "conditioning",
+        label: "Seated Bike Test + Aerobic",
+        hrTarget: "Z2",
+        sessions: [
+          { name: "15 min seated bike at Z2 — assess sit-bone tolerance", zone: "Z2" },
+          { name: "If tolerated: continue to 35 min total", zone: "Z2" },
+          { name: "If not tolerated: switch to elliptical for remaining time", zone: "Z2" },
+        ],
+        notes: "This is the key test. If you can sit for 15+ min, we're on track to use the bike normally going forward.",
+        physio: ["Movement Prep drills"],
+      },
+      {
+        day: "Friday",
+        type: "strength",
+        label: "Lateral Chain + Hip Thrust",
+        sessions: [
+          { name: "Full strength circuit (same as Tuesday + single leg hip thrust 3×8 bodyweight)" },
+          { name: "Single-leg calf raises — 3×15 each, straight + bent knee (bodyweight, 3s eccentric)" },
+        ],
+        notes: "Hip thrust progressed to 8 reps.",
+      },
+      {
+        day: "Saturday",
+        type: "conditioning",
+        label: "Continuous Jog Attempt",
+        hrTarget: "Z2",
+        sessions: [
+          { name: "Movement Prep drills as warm-up" },
+          { name: "15 min continuous jog at Z2", zone: "Z2" },
+          { name: "5 min walk", zone: "Z1" },
+          { name: "4×50m strides at 70% effort", zone: "Z3" },
+        ],
+        notes: "First continuous jog. Stay slow. The strides at the end introduce your legs to faster turnover without full sprinting.",
+      },
+      { day: "Sunday", type: "rest", label: "Full Rest — Phase Gate Assessment", sessions: [], notes: "Check all three gates before moving to Phase 2. If sit-bone still can't handle the bike, extend Phase 1 by a week and adjust." },
+    ],
+  });
+
+  // WEEK 4
+  weeks.push({
+    number: 4,
+    phase: "Transition to Running",
+    focus: "Reintroduce seated bike if tolerated, first running intervals, increase lateral chain demand",
+    progressionGate: "Can jog 20 min without issue. Running intervals don't aggravate PTFJ.",
+    days: [
+      {
+        day: "Monday",
+        type: "conditioning",
+        label: "Bike Intervals (Seated if tolerated)",
+        hrTarget: "Z4–5",
+        sessions: [
+          { name: "Warm-up: 8 min easy spin", zone: "Z2" },
+          { name: "10×10s sprints / 50s recovery", zone: "Z5" },
+          { name: "3 min rest" },
+          { name: "4×30s hard / 90s recovery", zone: "Z4" },
+          { name: "Cool-down: 5 min", zone: "Z1" },
+        ],
+        notes: "If seated is okay, great. If not, stay standing or use elliptical intervals.",
+        physio: ["Movement Prep drills"],
+      },
+      {
+        day: "Tuesday",
+        type: "strength",
+        label: "Lateral Chain Strength",
+        sessions: [
+          { name: "Adduction plank — 3×60s" },
+          { name: "DB 1-leg RDL — 3×12 (18lb each hand = 36lb total, 5s eccentric). LEFT: torso parallel max (FAI)." },
+          { name: "Stabilization lunge — 3×8 (single 18lb DB goblet hold)" },
+          { name: "Adductor slide — 3×10" },
+          { name: "Side lunges — 3×8 with 18lb DB each hand. LEFT: shallower depth (FAI)." },
+        ],
+      },
+      { day: "Wednesday", type: "rest", label: "Rest + Daily Physio", sessions: [] },
+      {
+        day: "Thursday",
+        type: "conditioning",
+        label: "First Running Intervals",
+        hrTarget: "Z3–4",
+        sessions: [
+          { name: "Movement Prep drills" },
+          { name: "10 min jog warm-up", zone: "Z2" },
+          { name: "6×100m at 75% effort / walk back recovery", zone: "Z3–4" },
+          { name: "10 min jog cool-down", zone: "Z2" },
+        ],
+        notes: "First real running intervals. 75% effort, not sprinting. Focus on smooth mechanics. Monitor PTFJ — any lateral knee pain, stop and walk.",
+        physio: ["Movement Prep before, stretching after"],
+      },
+      {
+        day: "Friday",
+        type: "strength",
+        label: "Lateral Chain + Hip Thrust",
+        sessions: [
+          { name: "Full strength circuit + single leg hip thrust 3×8 (18lb DB on hip)" },
+          { name: "Add: single-leg calf raises 3×12 each with 18lb DB — straight + bent knee, 3s eccentric. Hold DB in one hand, wall for balance with other." },
+        ],
+        notes: "Adding calf raises to protect Achilles as running volume increases.",
+      },
+      {
+        day: "Saturday",
+        type: "conditioning",
+        label: "Tempo Jog",
+        hrTarget: "Z2–3",
+        sessions: [
+          { name: "Movement Prep drills" },
+          { name: "20 min continuous jog", zone: "Z2" },
+          { name: "5 min at Z3 (comfortably hard)", zone: "Z3" },
+          { name: "5 min walk cool-down", zone: "Z1" },
+        ],
+        notes: "Building toward sustained moderate effort. The 5 min at Z3 simulates a passage of play. After session: 5 min barefoot walking on grass (first barefoot exposure beyond daily physio). Orthotics stay in for all running.",
+      },
+      { day: "Sunday", type: "rest", label: "Full Rest", sessions: [] },
+    ],
+  });
+
+  // WEEK 5
+  weeks.push({
+    number: 5,
+    phase: "Transition to Running",
+    focus: "Increase running interval intensity, introduce shuttle runs, continue lateral chain progression",
+    progressionGate: "Can complete 6×200m without PTFJ flare. HR recovers to Z2 within 90s after sprints.",
+    days: [
+      {
+        day: "Monday",
+        type: "conditioning",
+        label: "Bike Intervals",
+        hrTarget: "Z4–5",
+        sessions: [
+          { name: "Warm-up: 8 min", zone: "Z2" },
+          { name: "6×30s hard / 60s recovery", zone: "Z4–5" },
+          { name: "3 min rest" },
+          { name: "2×3 min at 85% max HR / 2 min recovery", zone: "Z4" },
+          { name: "Cool-down: 5 min", zone: "Z1" },
+        ],
+        notes: "First 3-minute efforts — these build the sustained high-output capacity for match play.",
+        physio: ["Movement Prep drills"],
+      },
+      {
+        day: "Tuesday",
+        type: "strength",
+        label: "Lateral Chain — Increase Challenge",
+        sessions: [
+          { name: "Adduction plank — 3×60s (add leg lift if able)" },
+          { name: "DB 1-leg RDL — 3×12 (18lb each hand = 36lb total, 5s eccentric — home max). LEFT: torso parallel max (FAI)." },
+          { name: "Stabilization lunge — 3×8 (single 18lb DB goblet hold)" },
+          { name: "Adductor slide — 3×12" },
+          { name: "Side lunges — 3×10 with 18lb DB each hand (home max). LEFT: shallower depth (FAI)." },
+          { name: "Single-leg calf raises — 3×12 each with 18lb DB, straight + bent knee, 3s eccentric" },
+        ],
+      },
+      { day: "Wednesday", type: "rest", label: "Rest + Daily Physio", sessions: [] },
+      {
+        day: "Thursday",
+        type: "conditioning",
+        label: "Running Intervals — 200m",
+        hrTarget: "Z4",
+        sessions: [
+          { name: "Movement Prep drills" },
+          { name: "10 min jog warm-up", zone: "Z2" },
+          { name: "6×200m at 80% / jog back recovery", zone: "Z4" },
+          { name: "5 min walk, then 4×short shuttle (5-10-15m)", zone: "Z4" },
+          { name: "10 min jog cool-down", zone: "Z2" },
+        ],
+        notes: "First shuttle runs. These train the deceleration and direction change that kills you in matches. Start conservatively with the PTFJ — no sharp cutting yet, just forward/backward shuttles.",
+      },
+      {
+        day: "Friday",
+        type: "strength",
+        label: "Full Strength + Hip Thrust",
+        sessions: [
+          { name: "Full circuit + single leg hip thrust 3×8 (18lb DB on hip)" },
+          { name: "Single-leg calf raises 3×12 each with 18lb DB, 3s eccentric (straight + bent knee)" },
+        ],
+      },
+      {
+        day: "Saturday",
+        type: "conditioning",
+        label: "Tempo Run",
+        hrTarget: "Z2–3",
+        sessions: [
+          { name: "Movement Prep drills" },
+          { name: "25 min continuous run: 15 min Z2, 8 min Z3, 2 min Z2", zone: "Z2–3" },
+          { name: "6×50m strides at 80%", zone: "Z3–4" },
+        ],
+        notes: "Building sustained running capacity. The Z3 block should feel like match-pace jogging. Post-session: 5 min barefoot grass walk. Notice how your big toe engages differently without orthotics.",
+      },
+      { day: "Sunday", type: "rest", label: "Full Rest", sessions: [] },
+    ],
+  });
+
+  // WEEK 6
+  weeks.push({
+    number: 6,
+    phase: "Transition to Running",
+    focus: "Final transition week. Running becomes primary. Introduce lateral shuttles if PTFJ allows.",
+    progressionGate: "Can run 30 min with tempo blocks. Shuttles don't aggravate PTFJ. Ready for soccer-specific work.",
+    days: [
+      {
+        day: "Monday",
+        type: "conditioning",
+        label: "Bike — Aerobic + Intervals",
+        hrTarget: "Z2–4",
+        sessions: [
+          { name: "20 min Z2 seated (active recovery)", zone: "Z2" },
+          { name: "4×30s hard / 60s recovery", zone: "Z4" },
+          { name: "10 min Z2 cool-down", zone: "Z2" },
+        ],
+        notes: "Bike is now a secondary tool. Lighter session to recover from weekend.",
+        physio: ["Movement Prep drills"],
+      },
+      {
+        day: "Tuesday",
+        type: "strength",
+        label: "Lateral Chain + Power Introduction",
+        sessions: [
+          { name: "Full strength circuit (progress all exercises)" },
+          { name: "Add: lateral band walks 3×15 each direction" },
+          { name: "Add: box step-ups 3×8 each leg (bodyweight)" },
+          { name: "Single-leg calf raises 3×12 each with 18lb DB, 3s eccentric (straight + bent knee)" },
+        ],
+        notes: "Introducing lateral band walks and step-ups for more dynamic lateral chain work.",
+      },
+      { day: "Wednesday", type: "rest", label: "Rest + Daily Physio", sessions: [] },
+      {
+        day: "Thursday",
+        type: "conditioning",
+        label: "Running Intervals + Lateral Shuttles",
+        hrTarget: "Z4–5",
+        sessions: [
+          { name: "Movement Prep drills" },
+          { name: "10 min jog warm-up", zone: "Z2" },
+          { name: "8×200m at 80% / jog back recovery", zone: "Z4" },
+          { name: "Rest 3 min" },
+          { name: "6×lateral shuttle (5m each way) — ONLY if PTFJ allows. L ankle: decelerate with control, don't let it collapse inward on direction change.", zone: "Z4" },
+          { name: "8 min jog cool-down", zone: "Z2" },
+        ],
+        notes: "First lateral shuttles. Low intensity. If any PTFJ pain, remove these and stick to forward/back shuttles.",
+      },
+      {
+        day: "Friday",
+        type: "strength",
+        label: "Strength + Hip Thrust",
+        sessions: [{ name: "Full circuit + hip thrust 3×10 (18lb DB on hip) + single-leg calf raises 3×12 each with 18lb DB, 3s eccentric" }],
+      },
+      {
+        day: "Saturday",
+        type: "conditioning",
+        label: "30-Min Tempo Run",
+        hrTarget: "Z2–3",
+        sessions: [
+          { name: "Movement Prep" },
+          { name: "30 min: 10 min Z2, 12 min Z3, 5 min Z2, 3 min Z4", zone: "Z2–4" },
+          { name: "6×50m strides" },
+        ],
+        notes: "Longest run yet. The 3-min Z4 block at the end simulates pressing hard when already fatigued.",
+      },
+      { day: "Sunday", type: "rest", label: "Full Rest — Phase Gate Assessment", sessions: [], notes: "Assess: ready for soccer-specific work? Check PTFJ, sit-bone, and overall fatigue." },
+    ],
+  });
+
+  // WEEK 7
+  weeks.push({
+    number: 7,
+    phase: "Soccer-Specific",
+    focus: "Match simulation introduction, agility work, pickup games if available",
+    progressionGate: "Can sustain 30 min of mixed-intensity running. Lateral movements tolerated.",
+    days: [
+      {
+        day: "Monday",
+        type: "conditioning",
+        label: "Match Simulation Lite",
+        hrTarget: "Z2–5 (mixed)",
+        sessions: [
+          { name: "Movement Prep" },
+          { name: "2×15 min blocks:", zone: "mixed" },
+          { name: "  — Jog 2–3 min at Z2", zone: "Z2" },
+          { name: "  — Sprint 10–15s every 2–3 min", zone: "Z5" },
+          { name: "  — Walk 30s recovery after each sprint", zone: "Z1" },
+          { name: "3 min rest between blocks" },
+        ],
+        notes: "This is the start of match simulation. The random sprint pattern mimics game demands.",
+      },
+      {
+        day: "Tuesday",
+        type: "strength",
+        label: "Lateral Chain + Power",
+        sessions: [
+          { name: "GYM: Full strength circuit — heavier DBs (30lb+) for RDLs, lunges, side lunges. Progress loads." },
+          { name: "Lateral band walks 3×15" },
+          { name: "Box step-ups 3×10 (18lb DB each hand)" },
+          { name: "Add: split squat jumps 3×6 (low height, controlled landing) — SKIP if PTFJ reacts. Land softly through midfoot. Monitor L ankle stability on every landing — if it rolls or wobbles, reduce height." },
+          { name: "GYM: Smith machine calf raises — 3×8–10, heavy (60lb+ working up), 4s eccentric, straight + bent knee. This is where tendon resilience gets built." },
+        ],
+        notes: "Introducing plyometric element with split squat jumps. These must be pain-free. GYM DAY — Smith machine for heavy calf work. Use the gym for heavier lunges and RDLs too while you're there.",
+      },
+      { day: "Wednesday", type: "rest", label: "Rest + Daily Physio", sessions: [] },
+      {
+        day: "Thursday",
+        type: "conditioning",
+        label: "Agility + Sprint Work",
+        hrTarget: "Z4–5",
+        sessions: [
+          { name: "Movement Prep" },
+          { name: "10 min jog warm-up", zone: "Z2" },
+          { name: "10×40m sprints / walk back recovery", zone: "Z5" },
+          { name: "Rest 3 min" },
+          { name: "Agility circuit: 4×(forward sprint 10m, lateral shuffle 5m, backpedal 10m, sprint 10m). L ankle: control every direction change.", zone: "Z4–5" },
+          { name: "8 min jog cool-down", zone: "Z2" },
+        ],
+        notes: "Full multi-directional work. This is where PTFJ management matters most. Lateral shuffle, not cutting. Keep orthotics in. Consider taping or a lightweight brace on L ankle for agility work from this week onward — fatigue + hypermobility + direction changes is the highest ankle-roll risk scenario. If barefoot grass walking has been going well, try Movement Prep drills barefoot on grass as warm-up (not the sprints).",
+      },
+      {
+        day: "Friday",
+        type: "conditioning",
+        label: "Active Recovery Bike",
+        hrTarget: "Z1–2",
+        sessions: [{ name: "25 min easy bike spin", zone: "Z1–2" }],
+        notes: "Recovery day before weekend push. Keep it genuinely easy.",
+      },
+      {
+        day: "Saturday",
+        type: "conditioning",
+        label: "Pickup Game or Long Match Sim",
+        hrTarget: "Z2–5",
+        sessions: [
+          { name: "Option A: Pickup game (aim for 45–60 min of play)" },
+          { name: "Option B: Solo match sim — 2×20 min with mixed sprints throughout, 5 min half-time" },
+        ],
+        notes: "If you can find a pickup game, this is the single best thing you can do for match fitness. The H10 data from a real game will be your benchmark. L ankle: tape or brace for all game play from now on.",
+      },
+      { day: "Sunday", type: "rest", label: "Full Rest", sessions: [] },
+    ],
+  });
+
+  // WEEK 8
+  weeks.push({
+    number: 8,
+    phase: "Soccer-Specific",
+    focus: "Extend match simulation duration, increase sprint volume, progress agility complexity",
+    progressionGate: "Can sustain 2×20 min match sim. Average HR in game/sim at 75–80% max.",
+    days: [
+      {
+        day: "Monday",
+        type: "conditioning",
+        label: "Match Simulation — Extended",
+        hrTarget: "Z2–5",
+        sessions: [
+          { name: "Movement Prep" },
+          { name: "2×20 min blocks: jog with sprint bursts every 2 min (10–20s)", zone: "mixed" },
+          { name: "5 min half-time walk" },
+        ],
+        notes: "Progression: longer blocks, more frequent sprints.",
+      },
+      {
+        day: "Tuesday",
+        type: "strength",
+        label: "Lateral Chain + Power",
+        sessions: [
+          { name: "GYM: Full strength circuit — heavier loads than home. Progress RDLs, lunges, side lunges with heavier DBs or barbell." },
+          { name: "Split squat jumps 3×8 (if tolerated) — monitor L ankle control on landing" },
+          { name: "Lateral bounds 3×6 each side (low, controlled) — land midfoot. L ankle: focus on sticking the landing, no wobble. These are the highest ankle-roll risk exercise in the program." },
+          { name: "GYM: Smith machine calf raises — 3×8–10, heavy, 4s eccentric (straight + bent knee). Progress weight from Week 7." },
+        ],
+        notes: "Adding lateral bounds — a key soccer movement pattern. Stay low, land soft. GYM DAY for heavy calf work.",
+      },
+      { day: "Wednesday", type: "rest", label: "Rest + Daily Physio", sessions: [] },
+      {
+        day: "Thursday",
+        type: "conditioning",
+        label: "Repeated Sprint Ability",
+        hrTarget: "Z4–5",
+        sessions: [
+          { name: "Movement Prep" },
+          { name: "10 min jog", zone: "Z2" },
+          { name: "3 sets of: 6×20m sprint / 20s rest between sprints / 3 min between sets", zone: "Z5" },
+          { name: "Agility circuit × 6 reps" },
+          { name: "10 min jog cool-down", zone: "Z2" },
+        ],
+        notes: "RSA training. This is the most match-specific conditioning you can do. The short rest between sprints simulates game situations where you sprint, barely recover, then sprint again. L ankle: if you feel it getting sloppy when fatigued, stop the set early. A rolled ankle now kills the program.",
+      },
+      {
+        day: "Friday",
+        type: "conditioning",
+        label: "Active Recovery",
+        hrTarget: "Z1–2",
+        sessions: [{ name: "25 min easy bike or walk", zone: "Z1–2" }],
+      },
+      {
+        day: "Saturday",
+        type: "conditioning",
+        label: "Pickup Game or Match Sim",
+        hrTarget: "Z2–5",
+        sessions: [
+          { name: "60–75 min of game play or 2×25 min solo match sim" },
+        ],
+        notes: "Push the duration. Compare this week's H10 data to last week's.",
+      },
+      { day: "Sunday", type: "rest", label: "Full Rest", sessions: [] },
+    ],
+  });
+
+  // WEEK 9
+  weeks.push({
+    number: 9,
+    phase: "Soccer-Specific",
+    focus: "Peak training load week. Longest match simulation. Maximum intensity.",
+    progressionGate: "Can sustain 2×30 min match sim at 80%+ average HR. Ready for match prep phase.",
+    days: [
+      {
+        day: "Monday",
+        type: "conditioning",
+        label: "Match Simulation — Peak",
+        hrTarget: "Z2–5",
+        sessions: [
+          { name: "Movement Prep" },
+          { name: "2×30 min: jog with sprint bursts every 90s–2 min", zone: "mixed" },
+          { name: "5 min half-time" },
+        ],
+        notes: "This is the hardest conditioning session of the program. 60 min of mixed-intensity work.",
+      },
+      {
+        day: "Tuesday",
+        type: "strength",
+        label: "Maintenance Strength",
+        sessions: [
+          { name: "GYM: Full strength circuit — maintain Week 8 loads on all exercises, don't increase" },
+          { name: "Plyometrics: split squat jumps + lateral bounds (3×8 each)" },
+          { name: "GYM: Smith machine calf raises — maintain Week 8 heavy loads, 3×8–10, 4s eccentric. Don't increase." },
+        ],
+        notes: "Strength is now maintenance mode. The priority is conditioning.",
+      },
+      { day: "Wednesday", type: "rest", label: "Rest + Daily Physio", sessions: [] },
+      {
+        day: "Thursday",
+        type: "conditioning",
+        label: "Peak RSA Session",
+        hrTarget: "Z4–5",
+        sessions: [
+          { name: "Movement Prep" },
+          { name: "10 min jog", zone: "Z2" },
+          { name: "4 sets of: 6×20m sprint / 20s rest / 3 min between sets", zone: "Z5" },
+          { name: "Agility circuit × 8 reps" },
+          { name: "8 min jog cool-down", zone: "Z2" },
+        ],
+        notes: "Peak sprint volume. 4 sets instead of 3. If you feel crushed by set 3, drop set 4. L ankle: if control deteriorates in later sets, stop agility work and jog out the rest. Tape/brace on for all agility.",
+      },
+      {
+        day: "Friday",
+        type: "conditioning",
+        label: "Active Recovery",
+        hrTarget: "Z1",
+        sessions: [{ name: "20 min very easy bike or walk", zone: "Z1" }],
+      },
+      {
+        day: "Saturday",
+        type: "conditioning",
+        label: "Pickup Game — Full Duration",
+        hrTarget: "Z2–5",
+        sessions: [
+          { name: "Full pickup game aiming for 75–90 min" },
+          { name: "Or 2×35 min solo match sim" },
+        ],
+        notes: "Try to play as close to full game duration as possible. This is your fitness test.",
+      },
+      { day: "Sunday", type: "rest", label: "Full Rest", sessions: [] },
+    ],
+  });
+
+  // WEEK 10
+  weeks.push({
+    number: 10,
+    phase: "Match Prep & Taper",
+    focus: "Reduce volume, maintain intensity, sharpen for match day",
+    progressionGate: "Feeling fresh, not fatigued. Resting HR stable. Confidence in 90-min capacity.",
+    days: [
+      {
+        day: "Monday",
+        type: "conditioning",
+        label: "Reduced Match Sim",
+        hrTarget: "Z2–5",
+        sessions: [
+          { name: "Movement Prep" },
+          { name: "2×20 min match sim (reduced from 2×30)", zone: "mixed" },
+        ],
+        notes: "Volume drops but intensity stays. You should feel faster and sharper.",
+      },
+      {
+        day: "Tuesday",
+        type: "strength",
+        label: "Maintenance Strength (Reduced)",
+        sessions: [
+          { name: "HOME: Abbreviated strength circuit with 18lb DBs — 2 sets instead of 3. Maintain, don't load heavy." },
+          { name: "Plyometrics: 2×6 each" },
+          { name: "Single-leg calf raises 3×10 each with 36lb (both DBs combined), deficit off step, 4s eccentric. Maintenance." },
+        ],
+        notes: "Keeping the movement patterns alive without creating fatigue.",
+      },
+      { day: "Wednesday", type: "rest", label: "Rest + Daily Physio", sessions: [] },
+      {
+        day: "Thursday",
+        type: "conditioning",
+        label: "Sharp Sprints",
+        hrTarget: "Z4–5",
+        sessions: [
+          { name: "Movement Prep" },
+          { name: "10 min jog", zone: "Z2" },
+          { name: "2 sets of: 6×20m sprint / 30s rest / 3 min between sets", zone: "Z5" },
+          { name: "Light agility circuit × 4" },
+          { name: "10 min jog", zone: "Z2" },
+        ],
+        notes: "Reduced sets, full recovery. Maintaining speed without accumulating fatigue.",
+      },
+      {
+        day: "Friday",
+        type: "rest",
+        label: "Rest or Very Light Movement",
+        sessions: [{ name: "Optional: 15 min walk", zone: "Z1" }],
+      },
+      {
+        day: "Saturday",
+        type: "conditioning",
+        label: "Pickup Game",
+        hrTarget: "Z2–5",
+        sessions: [{ name: "45–60 min game — don't go all out, save something" }],
+        notes: "Play at 85%. This is a dress rehearsal, not the performance.",
+      },
+      { day: "Sunday", type: "rest", label: "Full Rest", sessions: [] },
+    ],
+  });
+
+  // WEEK 11
+  weeks.push({
+    number: 11,
+    phase: "Match Prep & Taper",
+    focus: "Final taper. Keep legs fresh. Stay sharp without heavy load.",
+    progressionGate: "YOU'RE MATCH READY. Trust the work you've done.",
+    days: [
+      {
+        day: "Monday",
+        type: "conditioning",
+        label: "Light Match Sim",
+        hrTarget: "Z2–4",
+        sessions: [
+          { name: "Movement Prep" },
+          { name: "15 min match sim at moderate intensity", zone: "Z2–4" },
+          { name: "6×40m strides at 80%", zone: "Z3–4" },
+        ],
+        notes: "Keep the engine ticking. Low volume, moderate intensity.",
+      },
+      {
+        day: "Tuesday",
+        type: "strength",
+        label: "Light Activation",
+        sessions: [
+          { name: "HOME: Abbreviated circuit with 18lb DBs — 2 sets, light. Activation only." },
+          { name: "Single-leg calf raises 2×10 each with 18lb DB, 3s eccentric. Light maintenance only." },
+          { name: "Focus on activation, not loading" },
+        ],
+      },
+      { day: "Wednesday", type: "rest", label: "Rest + Daily Physio", sessions: [] },
+      {
+        day: "Thursday",
+        type: "conditioning",
+        label: "Sharpening Session",
+        hrTarget: "Z4–5",
+        sessions: [
+          { name: "10 min jog", zone: "Z2" },
+          { name: "6×20m sprints with full recovery", zone: "Z5" },
+          { name: "Light agility × 4 reps" },
+          { name: "10 min jog", zone: "Z2" },
+        ],
+        notes: "Last hard session. Short, sharp. You should feel fast.",
+      },
+      {
+        day: "Friday",
+        type: "rest",
+        label: "Rest",
+        sessions: [],
+        notes: "Hydrate, eat well, sleep 8+ hours.",
+      },
+      {
+        day: "Saturday",
+        type: "conditioning",
+        label: "Pre-Match Activation",
+        sessions: [
+          { name: "Movement Prep drills" },
+          { name: "10 min easy jog", zone: "Z2" },
+          { name: "4×30m strides", zone: "Z3" },
+          { name: "Dynamic stretching" },
+        ],
+        notes: "Just enough to feel loose and ready. If match is Sunday, this is your activation day.",
+      },
+      {
+        day: "Sunday",
+        type: "match",
+        label: "⚽ MATCH DAY",
+        sessions: [
+          { name: "Full warm-up with Movement Prep drills" },
+          { name: "Play the full 90 minutes" },
+          { name: "Wear your H10 — this is the data set you've been building toward" },
+        ],
+        notes: "Trust the 11 weeks. Manage your energy — don't sprint everything in the first 15 min. The fitness is there. Orthotics in your boots. L ankle taped or braced. Make sure you've tested this boot+orthotic+tape combo in training before today.",
+      },
+    ],
+  });
+
+  return weeks;
+}
 
     const PROGRAM_DATA = {
       meta: {
@@ -856,7 +1048,7 @@
                   );
                 })}
                 <div style={{ marginTop: 16, padding: 14, borderRadius: 10, background: "#0f1a14", border: "1px solid #16653422" }}>
-                  <p style={{ fontSize: 12, color: "#4ade80", margin: 0, fontWeight: 600 }}>📱 No H10 yet? Use RPE</p>
+                  <p style={{ fontSize: 12, color: "#4ade80", margin: 0, fontWeight: 600 }}>📱 Use RPE until Thursday Week 1 when your H10 arrives</p>
                   <div style={{ fontSize: 12, color: "#6b9e7e", margin: "6px 0 0", lineHeight: 1.8 }}>
                     <div>RPE 2–3 → Walking, easy conversation</div>
                     <div>RPE 4–5 → Light jog, full sentences</div>
