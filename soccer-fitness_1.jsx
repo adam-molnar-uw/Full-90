@@ -1,0 +1,1444 @@
+import { useState, useEffect, useCallback } from "react";
+
+const START_DATE = new Date(2026, 1, 7); // Feb 7, 2026
+
+function getDateForDay(weekNum, dayIdx) {
+  let totalDays = 0;
+  for (let w = 0; w < weekNum - 1; w++) {
+    if (PROGRAM_DATA.weeks[w]) totalDays += PROGRAM_DATA.weeks[w].days.length;
+  }
+  totalDays += dayIdx;
+  const date = new Date(START_DATE);
+  date.setDate(date.getDate() + totalDays);
+  return date;
+}
+
+function formatDate(date) {
+  const months = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+  return `${months[date.getMonth()]} ${date.getDate()}`;
+}
+
+function generateWeeks() {
+  const weeks = [];
+
+  // ===== WEEK 1 =====
+  weeks.push({
+    number: 1,
+    phase: "Base + Nerve Recovery",
+    focus: "Establish routine, protect sit-bone, build aerobic base without bike seat",
+    progressionGate: "Ischial tuberosity pain not worsening. Groin nerve at 0/10 or resolving. Can complete all physio exercises without flare-up.",
+    days: [
+      {
+        day: "Saturday", type: "rest", label: "Day 1 — Inflammation Management",
+        sessions: [
+          { name: "Piriformis release with ball — do now and again tonight" },
+          { name: "Glute release — all 3 rounds today" },
+          { name: "Hollow hold — 3×30s barefoot" },
+          { name: "Foot exercises: short foot, big toe press-downs, towel scrunches" },
+          { name: "Heat pad on sit-bone/glute area: 15–20 min (NOT ice). Do piriformis release right after while tissue is warm." },
+        ],
+        notes: "NO bike. NO sitting on hard surfaces. Use a cushion with coccyx cutout or sit on folded towel offset to thighs. Do NOT stretch hamstrings — pulls directly on ischial tuberosity. Gentle walking is fine. HEAT not ice for all nerve-related flare-ups.",
+      },
+      {
+        day: "Sunday", type: "rest", label: "Day 2 — Rest + Physio Only",
+        sessions: [
+          { name: "Full daily physio (hollow hold, piriformis, glute release, foot exercises)" },
+          { name: "Assess sit-bone after sleep — is inflammation settling?" },
+          { name: "Heat pad 15–20 min on glute/sit-bone area if still sensitive." },
+          { name: "Gentle 15 min walk if feeling okay", zone: "Z1" },
+        ],
+        notes: "If sit-bone is calming down, you're on track for Monday. If still very irritated, adjust Monday to pure upper body or pool work.",
+      },
+      {
+        day: "Monday", type: "conditioning", label: "Standing Bike Intervals",
+        hrTarget: "RPE 8–9 during sprints",
+        sessions: [
+          { name: "Warm-up: 5 min standing pedal, easy pace", zone: "RPE 4" },
+          { name: "8×10s standing sprints / 50s easy standing pedal", zone: "RPE 8–9" },
+          { name: "Cool-down: 5 min easy", zone: "RPE 2–3" },
+        ],
+        notes: "Stay standing the entire time. If sit-bone flares even standing, switch to elliptical.",
+        physio: ["Movement Prep: Ankle hops, A-skip, B-skip, Carioca (3×50ft each, 90s rest). CUE: L ankle control on all landings. SKIP Carioca if groin nerve is active."],
+      },
+      {
+        day: "Tuesday", type: "strength", label: "Lateral Chain Strength + H10 Setup",
+        sessions: [
+          { name: "🎉 H10 arrives today — charge it, pair with Polar app, wear it for every session" },
+          { name: "Adduction plank, long lever — 3×45–60s. MONITOR: if groin area flares, reduce hold time or skip." },
+          { name: "DB 1-leg RDL — 3×8 (single 18lb DB, 5s eccentric) — LEFT SIDE: torso parallel (hip restriction). RIGHT SIDE: stop before sit-bone stretch.", zone: "Controlled" },
+          { name: "Stabilization lunge — 3×6" },
+          { name: "Adductor slide (towel) — 3×8. MONITOR: if groin nerve tingling increases, reduce range or skip." },
+          { name: "Side lunges — 3×6. LEFT SIDE: shallower depth (hip restriction)." },
+        ],
+        notes: "On 1-leg RDL: LEFT side depth limit is hip soft tissue restriction — torso parallel, progress deeper as mobility improves. RIGHT side: sit-bone is the limiter. Stabilization lunge is also your L ankle proprioception builder.",
+      },
+      {
+        day: "Wednesday", type: "rest", label: "Rest + Daily Physio Only",
+        sessions: [],
+        notes: "Daily physio only. Piriformis release and glute release are especially important today.",
+      },
+      {
+        day: "Thursday", type: "conditioning", label: "Aerobic Base",
+        hrTarget: "Z2",
+        sessions: [
+          { name: "PUT ON H10 — first tracked session" },
+          { name: "30 min elliptical or standing bike at conversational pace", zone: "Z2" },
+          { name: "If using pool: 30 min aqua jogging (excellent for nerve recovery)", zone: "Z2" },
+        ],
+        notes: "H10 is on — stay in Z2 (133–145 bpm) throughout. Elliptical or pool are ideal. Max HR test moved to Saturday.",
+        physio: ["Movement Prep drills. SKIP Carioca if groin nerve is active."],
+      },
+      {
+        day: "Friday", type: "strength", label: "Lateral Chain + Hip Stability",
+        sessions: [
+          { name: "GROIN SCREEN FIRST: 4 bodyweight side lunges each side. Rate groin 0–10. If 3+/10 → rest day." },
+          { name: "1. Stabilization lunge — 3×6 (TEST: if groin nerve fires, skip adduction plank + adductor slide)" },
+          { name: "2. DB 1-leg RDL — 3×8 (single 18lb DB, 5s eccentric). LEFT: torso parallel (hip restriction)." },
+          { name: "3. Side lunges — 3×6 BODYWEIGHT. LEFT: shallower depth (hip restriction)." },
+          { name: "4. Single leg hip thrust — 3×6 (bodyweight)" },
+          { name: "5. Single-leg calf raises — 3×15 each, straight + bent knee (bodyweight, 3s eccentric). Wall for balance." },
+          { name: "6. Adduction plank — 3×45–60s. ONLY if stabilization lunge was clean." },
+          { name: "7. Adductor slide — 3×8. ONLY if adduction plank was clean." },
+        ],
+        notes: "Exercise order is intentional — stabilization lunge screens for adductor work. LEFT RDL depth progresses as hip mobility improves.",
+      },
+      {
+        day: "Saturday", type: "conditioning", label: "Conditioning + Max HR Test",
+        hrTarget: "Z2 warm-up, ALL-OUT for test, Z1–2 for jog",
+        sessions: [
+          { name: "GROIN SCREEN: 4 side lunges each side. Rate 0–10. If 3+/10 → rest day." },
+          { name: "Movement Prep: Ankle hops, A-skip, B-skip. SKIP Carioca unless groin is 0/10." },
+          { name: "5 min walk warm-up", zone: "Z1" },
+          { name: "10–15 min easy jog or standing bike warm-up", zone: "Z2" },
+          { name: "MAX HR TEST: 4-min all-out on standing bike or treadmill incline. Last 30s = absolute max.", zone: "Z5" },
+          { name: "Rest 5 min. Record peak HR. Set Polar zones." },
+          { name: "4×(2 min jog / 2 min walk)", zone: "Z2" },
+          { name: "5 min walk cool-down", zone: "Z1" },
+        ],
+        notes: "Max HR test: min 1 = RPE 7, min 2 = RPE 8, min 3 = RPE 9, last 30s = RPE 10. After test, jog intervals validate your new zones.",
+      },
+      {
+        day: "Sunday", type: "rest", label: "Full Rest — End of Week 1",
+        sessions: [],
+        notes: "Daily physio only. Assess: sit-bone after a full week? Knees? Compare to last Saturday.",
+      },
+    ],
+  });
+
+  // ===== WEEK 2 =====
+  weeks.push({
+    number: 2,
+    phase: "Base + Nerve Recovery",
+    focus: "Progress standing intervals, extend jog duration, continue nerve recovery",
+    progressionGate: "Sit-bone stable or improving. Groin nerve resolved or nearly resolved. Knees tolerated walk/jog without PTFJ flare.",
+    days: [
+      {
+        day: "Monday", type: "conditioning", label: "Standing Bike Intervals",
+        hrTarget: "Z4–5 during sprints",
+        sessions: [
+          { name: "Warm-up: 5 min standing pedal", zone: "Z2" },
+          { name: "10×10s standing sprints / 50s recovery", zone: "Z5" },
+          { name: "Cool-down: 5 min easy", zone: "Z1" },
+        ],
+        notes: "Progressed from 8 to 10 sprints. Full standing throughout.",
+        physio: ["Movement Prep: Ankle hops, A-skip, B-skip, Carioca. SKIP Carioca if groin nerve is still active."],
+      },
+      {
+        day: "Tuesday", type: "strength", label: "Lateral Chain Strength",
+        sessions: [
+          { name: "Adduction plank — 3×50–60s. MONITOR: skip if groin nerve active." },
+          { name: "DB 1-leg RDL — 3×10 (single 18lb DB, 5s eccentric). LEFT: torso parallel (hip restriction)." },
+          { name: "Stabilization lunge — 3×6" },
+          { name: "Adductor slide — 3×8" },
+          { name: "Side lunges — 3×8. LEFT: shallower depth (hip restriction)." },
+        ],
+        notes: "Small rep progressions. LEFT RDL depth progresses as hip mobility improves — work to the edge of restriction without forcing.",
+      },
+      { day: "Wednesday", type: "rest", label: "Rest + Daily Physio", sessions: [] },
+      {
+        day: "Thursday", type: "conditioning", label: "Aerobic Base",
+        hrTarget: "Z2 (133–145 bpm)",
+        sessions: [
+          { name: "35 min elliptical or pool at conversational pace", zone: "Z2" },
+        ],
+        notes: "Extend duration by 5 min. Try seated bike briefly (5 min) at end to test sit-bone tolerance.",
+        physio: ["Movement Prep drills. SKIP Carioca if groin nerve is still active."],
+      },
+      {
+        day: "Friday", type: "strength", label: "Lateral Chain + Hip Thrust",
+        sessions: [
+          { name: "Adduction plank — 3×60s" },
+          { name: "DB 1-leg RDL — 3×10 (single 18lb DB, 5s eccentric). LEFT: torso parallel (hip restriction)." },
+          { name: "Stabilization lunge — 3×6" },
+          { name: "Adductor slide — 3×8" },
+          { name: "Side lunges — 3×8. LEFT: shallower depth (hip restriction)." },
+          { name: "Single leg hip thrust — 3×6 (bodyweight)" },
+          { name: "Single-leg calf raises — 3×15 each, straight + bent knee (bodyweight, 3s eccentric)" },
+        ],
+      },
+      {
+        day: "Saturday", type: "conditioning", label: "Walk/Jog Progression",
+        hrTarget: "Z1–2",
+        sessions: [
+          { name: "5 min walk", zone: "Z1" },
+          { name: "5×(2 min jog / 90s walk)", zone: "Z2" },
+          { name: "5 min walk cool-down", zone: "Z1" },
+        ],
+        notes: "More intervals, shorter rest. Total jog time: 10 min.",
+        physio: ["Movement Prep before jog. SKIP Carioca if groin nerve is still active."],
+      },
+      { day: "Sunday", type: "rest", label: "Full Rest", sessions: [], notes: "Weekly assessment: sit-bone status, knee response to jogging, overall energy." },
+    ],
+  });
+
+  // ===== WEEK 3 =====
+  weeks.push({
+    number: 3,
+    phase: "Base + Nerve Recovery",
+    focus: "Test seated bike, extend running, introduce longer sprint intervals",
+    progressionGate: "Can tolerate 10+ min seated bike. Jog 15 min continuous without PTFJ or sit-bone flare. Groin nerve resolved. Ready for Phase 2.",
+    days: [
+      {
+        day: "Monday", type: "conditioning", label: "Interval Progression",
+        hrTarget: "Z4–5",
+        sessions: [
+          { name: "Warm-up: 5 min", zone: "Z2" },
+          { name: "10×10s sprints / 50s recovery (standing)", zone: "Z5" },
+          { name: "Rest 3 min, then 3×30s hard efforts / 90s recovery", zone: "Z4" },
+          { name: "Cool-down: 5 min", zone: "Z1" },
+        ],
+        notes: "First 30s intervals. These build lactate tolerance needed for match play.",
+        physio: ["Movement Prep drills. SKIP Carioca if groin nerve is still active."],
+      },
+      {
+        day: "Tuesday", type: "strength", label: "Lateral Chain — Progress Load",
+        sessions: [
+          { name: "Adduction plank — 3×60s." },
+          { name: "DB 1-leg RDL — 3×10 (single 18lb DB, 5s eccentric). LEFT: torso parallel, progress as mobility allows (hip restriction)." },
+          { name: "Stabilization lunge — 3×8" },
+          { name: "Adductor slide — 3×10" },
+          { name: "Side lunges — 3×8 with 18lb DB goblet hold. LEFT: shallower depth (hip restriction)." },
+          { name: "Single-leg calf raises — 3×15 each, straight + bent knee (bodyweight, 3s eccentric)" },
+        ],
+      },
+      { day: "Wednesday", type: "rest", label: "Rest + Daily Physio", sessions: [] },
+      {
+        day: "Thursday", type: "conditioning", label: "Seated Bike Test + Aerobic",
+        hrTarget: "Z2 (133–145 bpm)",
+        sessions: [
+          { name: "15 min seated bike at Z2 — assess sit-bone tolerance", zone: "Z2" },
+          { name: "If tolerated: continue to 35 min total", zone: "Z2" },
+          { name: "If not tolerated: switch to elliptical for remaining time", zone: "Z2" },
+        ],
+        notes: "Key test. If you can sit for 15+ min, bike is available going forward.",
+        physio: ["Movement Prep drills."],
+      },
+      {
+        day: "Friday", type: "strength", label: "Lateral Chain + Hip Thrust",
+        sessions: [
+          { name: "Adduction plank — 3×60s" },
+          { name: "DB 1-leg RDL — 3×10 (single 18lb DB, 5s eccentric). LEFT: torso parallel (hip restriction)." },
+          { name: "Stabilization lunge — 3×8" },
+          { name: "Adductor slide — 3×10" },
+          { name: "Side lunges — 3×8 with 18lb DB goblet. LEFT: shallower depth (hip restriction)." },
+          { name: "Single leg hip thrust — 3×8 (bodyweight)" },
+          { name: "Single-leg calf raises — 3×15 each, straight + bent knee (bodyweight, 3s eccentric)" },
+        ],
+      },
+      {
+        day: "Saturday", type: "conditioning", label: "Continuous Jog Attempt",
+        hrTarget: "Z2 (133–145 bpm)",
+        sessions: [
+          { name: "Movement Prep drills. SKIP Carioca if groin nerve is still active." },
+          { name: "15 min continuous jog at Z2", zone: "Z2" },
+          { name: "5 min walk", zone: "Z1" },
+          { name: "4×50m strides at 70% effort", zone: "Z3" },
+        ],
+        notes: "First continuous jog. Stay slow. Strides at the end introduce faster turnover without full sprinting.",
+      },
+      { day: "Sunday", type: "rest", label: "Full Rest — Phase Gate", sessions: [], notes: "Check all gates before Phase 2. If sit-bone can't handle bike, extend Phase 1 by a week." },
+    ],
+  });
+
+  // ===== WEEK 4 =====
+  weeks.push({
+    number: 4,
+    phase: "Transition to Running",
+    focus: "Reintroduce seated bike, first running intervals, increase lateral chain demand",
+    progressionGate: "Can jog 20 min without issue. Running intervals don't aggravate PTFJ.",
+    days: [
+      {
+        day: "Monday", type: "conditioning", label: "Bike Intervals (Seated if tolerated)",
+        hrTarget: "Z4–5 (158–182 bpm)",
+        sessions: [
+          { name: "Warm-up: 8 min easy spin", zone: "Z2" },
+          { name: "10×10s sprints / 50s recovery", zone: "Z5" },
+          { name: "3 min rest" },
+          { name: "4×30s hard / 90s recovery", zone: "Z4" },
+          { name: "Cool-down: 5 min", zone: "Z1" },
+        ],
+        notes: "If seated is okay, great. If not, stay standing or use elliptical intervals. Bike cue: knees track outward every pedal stroke.",
+        physio: ["BAREFOOT Movement Prep drills"],
+      },
+      {
+        day: "Tuesday", type: "strength", label: "Lateral Chain Strength",
+        sessions: [
+          { name: "Adduction plank — 3×60s" },
+          { name: "DB 1-leg RDL — 3×12 (18lb each hand = 36lb total, 5s eccentric). LEFT: torso parallel, progress deeper as mobility allows (hip restriction)." },
+          { name: "Stabilization lunge — 3×8 (single 18lb DB goblet hold)" },
+          { name: "Adductor slide — 3×10" },
+          { name: "Side lunges — 3×8 with 18lb DB each hand. LEFT: shallower depth (hip restriction)." },
+        ],
+      },
+      { day: "Wednesday", type: "rest", label: "Rest + Daily Physio", sessions: [] },
+      {
+        day: "Thursday", type: "conditioning", label: "First Running Intervals",
+        hrTarget: "Z3–4 (145–170 bpm)",
+        sessions: [
+          { name: "BAREFOOT Movement Prep drills" },
+          { name: "10 min jog warm-up", zone: "Z2" },
+          { name: "6×100m at 75% effort / walk back recovery", zone: "Z3–4" },
+          { name: "10 min jog cool-down", zone: "Z2" },
+        ],
+        notes: "First real running intervals. 75% effort, not sprinting. Monitor PTFJ — any lateral knee pain, stop and walk.",
+        physio: ["Movement Prep before, stretching after"],
+      },
+      {
+        day: "Friday", type: "strength", label: "Lateral Chain + Hip Thrust",
+        sessions: [
+          { name: "Adduction plank — 3×60s" },
+          { name: "DB 1-leg RDL — 3×12 (18lb each hand = 36lb total, 5s eccentric). LEFT: torso parallel (hip restriction)." },
+          { name: "Stabilization lunge — 3×8 (single 18lb DB goblet)" },
+          { name: "Adductor slide — 3×10" },
+          { name: "Side lunges — 3×8 with 18lb DB each hand. LEFT: shallower depth (hip restriction)." },
+          { name: "Single leg hip thrust — 3×8 (18lb DB on hip)" },
+          { name: "Single-leg calf raises 3×12 each with 18lb DB, straight + bent knee, 3s eccentric. Wall for balance." },
+        ],
+        notes: "Adding calf raises to protect Achilles as running volume increases. Wall touch mandatory on all calf raises — terminate set on form breakdown.",
+      },
+      {
+        day: "Saturday", type: "conditioning", label: "Tempo Jog",
+        hrTarget: "Z2–3 (133–158 bpm)",
+        sessions: [
+          { name: "BAREFOOT Movement Prep drills" },
+          { name: "20 min continuous jog", zone: "Z2" },
+          { name: "5 min at Z3 (comfortably hard)", zone: "Z3" },
+          { name: "5 min walk cool-down", zone: "Z1" },
+        ],
+        notes: "The 5 min at Z3 simulates a passage of play. After session: 5 min barefoot walking on grass. Orthotics in for all running.",
+      },
+      { day: "Sunday", type: "rest", label: "Full Rest", sessions: [] },
+    ],
+  });
+
+  // ===== WEEK 5 =====
+  weeks.push({
+    number: 5,
+    phase: "Transition to Running",
+    focus: "GYM transition. Increase running interval intensity, introduce shuttle runs, lateral chain progression. Nordics introduced.",
+    progressionGate: "Can complete 6×200m (or 6×35s at Z4) without PTFJ flare. HR recovers to Z2 within 90s after sprints.",
+    days: [
+      {
+        day: "Monday", type: "conditioning", label: "Easy Conditioning",
+        hrTarget: "Z1–2 (121–145 bpm)",
+        sessions: [
+          { name: "BAREFOOT Movement Prep drills" },
+          { name: "Pre-run priming: 1 round isometric eversions + calf holds (45-min analgesic window)" },
+          { name: "20–25 min easy jog from door", zone: "Z1–2" },
+        ],
+        notes: "Genuinely easy. Running is the preferred conditioning tool — bike is last resort for PTFJ management. Post-run: foam roll mid-belly hamstrings + calves immediately + again 2–3 hrs later.",
+      },
+      { day: "Tuesday", type: "rest", label: "Rest + Daily Physio", sessions: [] },
+      {
+        day: "Wednesday", type: "strength", label: "GYM — Strength (Introductions)",
+        sessions: [
+          { name: "GYM: DB 1-leg RDL — 3×12 (30lb R / 25lb L, 5s eccentric). LEFT: torso parallel, progress as mobility allows." },
+          { name: "GYM: Stabilization lunge — 3×8 (2×25lb DBs)" },
+          { name: "GYM: Side lunges — 3×8 (25lb goblet). LEFT: shallower depth (hip restriction)." },
+          { name: "GYM: Hip thrust — 3×10 (30lb DB)" },
+          { name: "GYM: Cable abduction — 3×12 (10lb). Targets glute med." },
+          { name: "GYM: Leg extension — 3×12 (25–40lb bilateral)" },
+          { name: "GYM: Single-leg calf raises — 3×12 (20lb R / BW L, 3s eccentric). Wall touch mandatory." },
+          { name: "Assisted Nordics — 3×3 reps (hands control descent, extremely slow eccentric only)" },
+          { name: "Full Copenhagen plank (foot on bench) — 1 variant only. Progress hold time." },
+          { name: "Side plank hip abduction — 3×30s each side, 90s rest" },
+          { name: "Pallof press (cable) — 3×10 each side. Anti-rotation." },
+        ],
+        notes: "First full gym session. Working weights are baselines — progress from here. Nordics: hands catch you at the bottom, 3–5s descent. Never stack short + full lever Copenhagen on same day. Don't program cable abduction AND side plank hip abduction on same day.",
+      },
+      {
+        day: "Thursday", type: "conditioning", label: "Running Intervals",
+        hrTarget: "Z4 (158–170 bpm)",
+        sessions: [
+          { name: "BAREFOOT Movement Prep drills" },
+          { name: "Pre-run priming: 1 round isometric eversions + calf holds (45-min analgesic window)" },
+          { name: "10 min jog warm-up", zone: "Z2" },
+          { name: "6×35s at Z4 / jog back recovery (time-based: track has only 25m straight)", zone: "Z4" },
+          { name: "5 min walk, then 4×short shuttle (5-10-15m fwd/back only)", zone: "Z4" },
+          { name: "10 min jog cool-down", zone: "Z2" },
+        ],
+        notes: "Time-based intervals (track constraint). First shuttle runs — forward/backward only, no sharp cutting. GRADED EXPOSURE: this is your gate test. Post-run: foam roll mid-belly hamstrings and calves immediately + again 2–3 hrs later. Track PTFJ through 5-hour delayed window.",
+      },
+      {
+        day: "Friday", type: "conditioning", label: "Easy Conditioning",
+        hrTarget: "Z1–2 (121–145 bpm)",
+        sessions: [
+          { name: "20 min easy jog or walk", zone: "Z1–2" },
+        ],
+        notes: "Active recovery. Keep it genuinely easy.",
+      },
+      {
+        day: "Saturday", type: "strength", label: "GYM — Strength",
+        sessions: [
+          { name: "GYM: DB 1-leg RDL — 3×12 (progress load from Wed). LEFT: torso parallel." },
+          { name: "GYM: Stabilization lunge — 3×8 (progress load)" },
+          { name: "GYM: Side lunges — 3×8 (progress load). LEFT: shallower depth." },
+          { name: "GYM: Hip thrust — 3×10 (progress load)" },
+          { name: "GYM: Cable abduction — 3×12 (progress load)" },
+          { name: "GYM: Leg extension — 3×12 (progress load)" },
+          { name: "GYM: Single-leg calf raises — 3×12, 3s eccentric. Wall touch mandatory." },
+          { name: "Assisted Nordics — 3×3 (continue slow eccentric)" },
+          { name: "Short lever Copenhagen (knee on bench) — 1 variant only" },
+          { name: "Side plank hip abduction — 3×30s each side" },
+          { name: "Hollow hold — 3×30s" },
+        ],
+        notes: "Progress weights where able. One Copenhagen variant per session (different from Wednesday's variant).",
+      },
+      {
+        day: "Sunday", type: "strength", label: "GYM — Strength (Light)",
+        sessions: [
+          { name: "GYM: DB 1-leg RDL — 2×12. Maintain loads." },
+          { name: "GYM: Stabilization lunge — 2×8" },
+          { name: "GYM: Side lunges — 2×8. LEFT: shallower depth." },
+          { name: "GYM: Hip thrust — 2×10" },
+          { name: "GYM: Single-leg calf raises — 2×12, 3s eccentric" },
+          { name: "Side plank hip abduction — 3×30s each side" },
+          { name: "Hollow hold — 3×30s" },
+        ],
+        notes: "Third strength day. Keep it lighter — focus on movement quality, not load progression.",
+      },
+    ],
+  });
+
+  // ===== WEEK 6 =====
+  weeks.push({
+    number: 6,
+    phase: "Transition to Running",
+    focus: "Final transition week. Running becomes primary. Test lateral shuttles. Post-run tissue management protocol validation.",
+    progressionGate: "Can run 30 min with tempo blocks. Post-run foam rolling keeps PTFJ at 0–1/10. Shuttles don't aggravate PTFJ. Ready for soccer-specific work.",
+    days: [
+      {
+        day: "Monday", type: "conditioning", label: "Easy Conditioning",
+        hrTarget: "Z1–2 (121–145 bpm)",
+        sessions: [
+          { name: "BAREFOOT Movement Prep drills" },
+          { name: "Pre-run priming: 1 round isometric eversions + calf holds" },
+          { name: "20–25 min easy jog", zone: "Z1–2" },
+        ],
+        notes: "Easy day. Post-jog: foam roll hamstrings (mid-belly) and calves immediately + 2–3 hrs later. Track PTFJ through 5-hour delayed window.",
+      },
+      { day: "Tuesday", type: "rest", label: "Rest + Daily Physio", sessions: [] },
+      {
+        day: "Wednesday", type: "strength", label: "GYM — Strength",
+        sessions: [
+          { name: "GYM: DB 1-leg RDL — 3×12 (progress load from Week 5). LEFT: torso parallel." },
+          { name: "GYM: Stabilization lunge — 3×8 (progress load)" },
+          { name: "GYM: Side lunges — 3×8 (progress load). LEFT: shallower depth." },
+          { name: "GYM: Hip thrust — 3×10 (progress load)" },
+          { name: "GYM: Cable abduction — 3×12 (progress load)" },
+          { name: "GYM: Leg extension — 3×12 (progress load)" },
+          { name: "GYM: Single-leg calf raises — 3×12, 3s eccentric" },
+          { name: "Add: lateral band walks 3×15 each direction" },
+          { name: "Add: box step-ups 3×8 each leg (bodyweight)" },
+          { name: "Assisted Nordics — 3×4 reps (progress from 3×3)" },
+          { name: "Full Copenhagen (foot on bench) — progress hold time" },
+          { name: "Side plank hip abduction — 3×30s each side" },
+          { name: "Pallof press (cable) — 3×10 each side" },
+        ],
+        notes: "Progress loads. Nordics progress reps before removing hand assistance. Lateral band walks and step-ups prepare for plyometric demands in Week 7.",
+      },
+      {
+        day: "Thursday", type: "conditioning", label: "Running Intervals + Lateral Shuttles",
+        hrTarget: "Z4–5 (158–182 bpm)",
+        sessions: [
+          { name: "BAREFOOT Movement Prep drills" },
+          { name: "Pre-run priming: 1 round isometric eversions + calf holds" },
+          { name: "10 min jog warm-up", zone: "Z2" },
+          { name: "8×35s at 80% / jog back recovery", zone: "Z4" },
+          { name: "Rest 3 min" },
+          { name: "6×lateral shuttle (5m each way) — ONLY if PTFJ allows.", zone: "Z4" },
+          { name: "8 min jog cool-down", zone: "Z2" },
+        ],
+        notes: "First lateral shuttles. Low intensity. If any PTFJ pain, remove these and stick to forward/back shuttles. L ankle: decelerate with control. Post-run: foam roll hamstrings + calves immediately and again 2–3 hrs later.",
+      },
+      {
+        day: "Friday", type: "strength", label: "GYM — Strength + Hip Thrust",
+        sessions: [
+          { name: "GYM: DB 1-leg RDL — 3×12 (progress load). LEFT: torso parallel." },
+          { name: "GYM: Stabilization lunge — 3×8 (progress load)" },
+          { name: "GYM: Side lunges — 3×8 (progress load). LEFT: shallower depth." },
+          { name: "GYM: Hip thrust — 3×10 (progress load)" },
+          { name: "GYM: Cable abduction — 3×12" },
+          { name: "GYM: Leg extension — 3×12" },
+          { name: "GYM: Single-leg calf raises — 3×12, 3s eccentric" },
+          { name: "Single-leg calf raises 3×12 each (progress load from Week 5), 3s eccentric" },
+          { name: "Assisted Nordics — 3×4" },
+          { name: "Short lever Copenhagen" },
+        ],
+      },
+      {
+        day: "Saturday", type: "conditioning", label: "30-Min Tempo Run",
+        hrTarget: "Z2–4 (133–170 bpm)",
+        sessions: [
+          { name: "BAREFOOT Movement Prep" },
+          { name: "Pre-run priming: 1 round isometric eversions + calf holds" },
+          { name: "30 min: 10 min Z2, 12 min Z3, 5 min Z2, 3 min Z4", zone: "Z2–4" },
+          { name: "6×50m strides" },
+        ],
+        notes: "Longest run yet. The 3-min Z4 block simulates pressing hard when fatigued. Post-run: foam roll hamstrings + calves immediately + 2–3 hrs later. Post-session: 5 min barefoot grass walk.",
+      },
+      { day: "Sunday", type: "rest", label: "Full Rest — Phase Gate Assessment", sessions: [], notes: "Assess: ready for soccer-specific work? Check PTFJ, sit-bone, overall fatigue. Does post-run tissue management keep PTFJ quiet across two running sessions?" },
+    ],
+  });
+
+  // ===== WEEK 7 =====
+  weeks.push({
+    number: 7,
+    phase: "Soccer-Specific",
+    focus: "Match simulation introduction, agility work, plyometrics. Tape/brace L ankle for all agility and game play.",
+    progressionGate: "Can sustain 30 min of mixed-intensity running. Lateral movements tolerated. LEFT hip stable under plyometric landing.",
+    days: [
+      {
+        day: "Monday", type: "conditioning", label: "Match Simulation Lite",
+        hrTarget: "Z2–5 (mixed)",
+        sessions: [
+          { name: "BAREFOOT Movement Prep" },
+          { name: "2×15 min blocks: jog Z2, sprint 10–15s every 2–3 min, walk 30s recovery", zone: "mixed" },
+          { name: "3 min rest between blocks" },
+        ],
+        notes: "Start of match simulation. Random sprint pattern mimics game demands. Post-run tissue management.",
+      },
+      { day: "Tuesday", type: "rest", label: "Rest + Daily Physio", sessions: [] },
+      {
+        day: "Wednesday", type: "strength", label: "GYM — Lateral Chain + Power",
+        sessions: [
+          { name: "GYM: DB 1-leg RDL — 3×12 (30lb+ DBs). LEFT: torso parallel, progress depth." },
+          { name: "GYM: Stabilization lunge — 3×10 (heavier DBs)" },
+          { name: "GYM: Side lunges — 3×10 (heavier DBs). LEFT: shallower depth." },
+          { name: "GYM: Hip thrust — 3×10 (progress load)" },
+          { name: "GYM: Cable abduction — 3×12 (progress load)" },
+          { name: "GYM: Leg extension — 3×12 (progress load)" },
+          { name: "Lateral band walks 3×15" },
+          { name: "Box step-ups 3×10 (18lb DB each hand)" },
+          { name: "Split squat jumps 3×6 — SKIP if PTFJ reacts. LEFT leg forward: control landing depth (hip restriction)." },
+          { name: "GYM: Smith machine calf raises — 3×8–10, heavy (60lb+ working up), 4s eccentric" },
+          { name: "Nordics — 3×4 (progress: reduce hand assistance)" },
+          { name: "Full Copenhagen — progress hold time" },
+          { name: "Side plank hip abduction — 3×30s each side" },
+          { name: "Pallof press — 3×10 each side" },
+          { name: "Cable woodchops — 3×10 each side. Rotational power for striking and turning." },
+        ],
+        notes: "Introducing plyometrics with split squat jumps — must be pain-free. Smith machine for heavy calf work. Cable woodchops are new.",
+      },
+      {
+        day: "Thursday", type: "conditioning", label: "Agility + Sprint Work",
+        hrTarget: "Z4–5 (158–182 bpm)",
+        sessions: [
+          { name: "BAREFOOT Movement Prep" },
+          { name: "10 min jog warm-up", zone: "Z2" },
+          { name: "10×40m sprints / walk back recovery", zone: "Z5" },
+          { name: "Rest 3 min" },
+          { name: "Agility circuit: 4×(forward 10m, lateral shuffle 5m, backpedal 10m, sprint 10m)", zone: "Z4–5" },
+          { name: "8 min jog cool-down", zone: "Z2" },
+        ],
+        notes: "Full multi-directional work. Lateral shuffle, not cutting. Tape/brace L ankle. Post-run tissue management protocol.",
+      },
+      {
+        day: "Friday", type: "conditioning", label: "Active Recovery",
+        hrTarget: "Z1–2",
+        sessions: [{ name: "25 min easy walk or jog", zone: "Z1–2" }],
+        notes: "Recovery day before weekend push. Genuinely easy. Avoid bike if PTFJ has been reactive.",
+      },
+      {
+        day: "Saturday", type: "strength", label: "GYM — Strength",
+        sessions: [
+          { name: "GYM: DB 1-leg RDL — 3×12. Maintain loads from Wed." },
+          { name: "GYM: Stabilization lunge — 3×10" },
+          { name: "GYM: Side lunges — 3×10. LEFT: shallower depth." },
+          { name: "GYM: Hip thrust — 3×10" },
+          { name: "GYM: Cable abduction — 3×12" },
+          { name: "GYM: Leg extension — 3×12" },
+          { name: "GYM: Single-leg calf raises — 3×12, 3s eccentric" },
+          { name: "Nordics — 3×4" },
+          { name: "Short lever Copenhagen" },
+          { name: "Side plank hip abduction — 3×30s each side" },
+        ],
+      },
+      {
+        day: "Sunday", type: "conditioning", label: "Pickup Game or Match Sim",
+        hrTarget: "Z2–5",
+        sessions: [
+          { name: "Option A: Pickup game (aim for 45–60 min)" },
+          { name: "Option B: Solo match sim — 2×20 min, 5 min half-time" },
+        ],
+        notes: "Pickup games are the PRIORITY from now on. Best match fitness tool. H10 data from a real game is your benchmark. L ankle: tape or brace.",
+      },
+    ],
+  });
+
+  // ===== WEEK 8 =====
+  weeks.push({
+    number: 8,
+    phase: "Soccer-Specific",
+    focus: "Peak loading week. Extend match simulation, increase sprint volume, progress agility. Heaviest loads.",
+    progressionGate: "Can sustain 2×20 min match sim. Average HR in game/sim at 75–80% max.",
+    days: [
+      {
+        day: "Monday", type: "conditioning", label: "Match Simulation — Extended",
+        hrTarget: "Z2–5 (mixed)",
+        sessions: [
+          { name: "BAREFOOT Movement Prep" },
+          { name: "2×20 min: jog with sprint bursts every 2 min (10–20s)", zone: "mixed" },
+          { name: "5 min half-time walk" },
+        ],
+        notes: "Longer blocks, more frequent sprints. Post-run tissue management.",
+      },
+      { day: "Tuesday", type: "rest", label: "Rest + Daily Physio", sessions: [] },
+      {
+        day: "Wednesday", type: "strength", label: "GYM — Peak Strength",
+        sessions: [
+          { name: "GYM: DB 1-leg RDL — 3×12 (heaviest loads of program). LEFT: torso parallel." },
+          { name: "GYM: Stabilization lunge — 3×10 (peak load)" },
+          { name: "GYM: Side lunges — 3×10 (peak load). LEFT: shallower depth." },
+          { name: "GYM: Hip thrust — 3×10 (peak load)" },
+          { name: "Split squat jumps 3×8. LEFT leg forward: control depth (hip restriction)." },
+          { name: "Lateral bounds 3×6 each side (low, controlled). Highest ankle-roll risk exercise." },
+          { name: "GYM: Smith machine calf raises — 3×8–10, peak load, 4s eccentric" },
+          { name: "Nordics — 3×5 (reduce hand assistance further)" },
+          { name: "Full Copenhagen — peak hold time" },
+          { name: "Side plank hip abduction — 3×30s" },
+          { name: "Pallof press — 3×10 each side" },
+          { name: "Cable woodchops — 3×10 each side" },
+          { name: "Cable abduction — 3×12 (progress load)" },
+          { name: "Leg extension — 3×12 (progress load)" },
+        ],
+        notes: "Peak strength day. Lateral bounds: stay low, land soft, midfoot. L ankle: focus on sticking the landing.",
+      },
+      {
+        day: "Thursday", type: "conditioning", label: "Repeated Sprint Ability",
+        hrTarget: "Z4–5 (158–182 bpm)",
+        sessions: [
+          { name: "BAREFOOT Movement Prep" },
+          { name: "10 min jog", zone: "Z2" },
+          { name: "3 sets of: 6×20m sprint / 20s rest / 3 min between sets", zone: "Z5" },
+          { name: "Agility circuit × 6 reps" },
+          { name: "10 min jog cool-down", zone: "Z2" },
+        ],
+        notes: "RSA training — most match-specific conditioning. Short rest between sprints simulates game situations. L ankle: if control deteriorates when fatigued, stop agility early. Post-run tissue management.",
+      },
+      {
+        day: "Friday", type: "conditioning", label: "Active Recovery",
+        hrTarget: "Z1–2",
+        sessions: [{ name: "25 min easy walk or jog", zone: "Z1–2" }],
+      },
+      {
+        day: "Saturday", type: "strength", label: "GYM — Strength (Maintain Peak)",
+        sessions: [
+          { name: "GYM: DB 1-leg RDL — 3×12. Maintain peak loads from Wed." },
+          { name: "GYM: Stabilization lunge — 3×10" },
+          { name: "GYM: Side lunges — 3×10. LEFT: shallower depth." },
+          { name: "GYM: Hip thrust — 3×10" },
+          { name: "GYM: Cable abduction — 3×12" },
+          { name: "GYM: Leg extension — 3×12" },
+          { name: "GYM: Single-leg calf raises — 3×12, 3s eccentric" },
+          { name: "Nordics — 3×5" },
+          { name: "Short lever Copenhagen" },
+          { name: "Side plank hip abduction" },
+        ],
+      },
+      {
+        day: "Sunday", type: "conditioning", label: "Pickup Game or Match Sim",
+        hrTarget: "Z2–5",
+        sessions: [{ name: "60–75 min of game play or 2×25 min solo match sim" }],
+        notes: "Push the duration. Compare H10 data to last week's.",
+      },
+    ],
+  });
+
+  // ===== WEEK 9 — DELOAD =====
+  weeks.push({
+    number: 9,
+    phase: "Soccer-Specific",
+    focus: "DELOAD — reduce volume 40%, maintain intensity. Recovery week before final push.",
+    progressionGate: "Feeling fresh, not fatigued. Resting HR stable. All injury sites at 0/10. Ready for peak week.",
+    days: [
+      {
+        day: "Monday", type: "conditioning", label: "Light Match Sim (Deload)",
+        hrTarget: "Z2–4",
+        sessions: [
+          { name: "BAREFOOT Movement Prep" },
+          { name: "2×12 min: jog with sprint bursts every 3 min", zone: "mixed" },
+          { name: "3 min rest between blocks" },
+        ],
+        notes: "DELOAD WEEK. Reduced from 2×20 to 2×12. Maintain sprint intensity but reduce total volume by 40%.",
+      },
+      { day: "Tuesday", type: "rest", label: "Rest + Daily Physio", sessions: [] },
+      {
+        day: "Wednesday", type: "strength", label: "GYM — Maintenance Strength (Deload)",
+        sessions: [
+          { name: "GYM: DB 1-leg RDL — 2×12. Maintain Week 8 loads, 2 sets not 3." },
+          { name: "GYM: Stabilization lunge — 2×10" },
+          { name: "GYM: Side lunges — 2×10. LEFT: shallower depth." },
+          { name: "GYM: Hip thrust — 2×10" },
+          { name: "GYM: Cable abduction — 2×12" },
+          { name: "GYM: Leg extension — 2×12" },
+          { name: "GYM: Single-leg calf raises — 2×12, 3s eccentric" },
+          { name: "Split squat jumps 2×6. Lateral bounds 2×4." },
+          { name: "Nordics — 2×4 (maintain quality, reduce volume)" },
+          { name: "Full Copenhagen — maintain hold, don't push" },
+          { name: "Side plank hip abduction — 2×30s" },
+          { name: "Pallof press — 2×10 each side" },
+        ],
+        notes: "DELOAD: maintain intensity, reduce volume. 2 sets not 3. Don't increase any loads.",
+      },
+      {
+        day: "Thursday", type: "conditioning", label: "Light Sprints (Deload)",
+        hrTarget: "Z4–5",
+        sessions: [
+          { name: "BAREFOOT Movement Prep" },
+          { name: "10 min jog", zone: "Z2" },
+          { name: "2 sets of: 4×20m sprint / 30s rest / 3 min between sets", zone: "Z5" },
+          { name: "Light agility × 4 reps" },
+          { name: "8 min jog cool-down", zone: "Z2" },
+        ],
+        notes: "DELOAD: reduced sets and reps. Full intensity on each sprint — just fewer of them.",
+      },
+      {
+        day: "Friday", type: "rest", label: "Rest",
+        sessions: [{ name: "Optional: 15 min walk", zone: "Z1" }],
+        notes: "Extra rest day in deload week. Hip mobility 3 rounds.",
+      },
+      {
+        day: "Saturday", type: "conditioning", label: "Easy Pickup or Walk",
+        hrTarget: "Z1–3",
+        sessions: [
+          { name: "Option A: 30–40 min easy pickup game (don't push)" },
+          { name: "Option B: 20 min easy jog + strides" },
+        ],
+        notes: "If playing, stay at 70%. This is active recovery, not a test. You should feel fresh entering Week 10.",
+      },
+      { day: "Sunday", type: "rest", label: "Full Rest", sessions: [], notes: "Absorb the training. Hydrate, eat well, sleep 8+ hours. You should feel noticeably better by tomorrow." },
+    ],
+  });
+
+  // ===== WEEK 10 =====
+  weeks.push({
+    number: 10,
+    phase: "Soccer-Specific",
+    focus: "Post-deload peak. Longest match simulation. Maximum intensity. You should feel fast and fresh.",
+    progressionGate: "Can sustain 2×30 min match sim at 80%+ average HR. Ready for match prep phase.",
+    days: [
+      {
+        day: "Monday", type: "conditioning", label: "Match Simulation — Peak",
+        hrTarget: "Z2–5",
+        sessions: [
+          { name: "BAREFOOT Movement Prep" },
+          { name: "2×30 min: jog with sprint bursts every 90s–2 min", zone: "mixed" },
+          { name: "5 min half-time" },
+        ],
+        notes: "Hardest conditioning session of the program. 60 min of mixed-intensity work. You should feel strong after the deload.",
+      },
+      { day: "Tuesday", type: "rest", label: "Rest + Daily Physio", sessions: [] },
+      {
+        day: "Wednesday", type: "strength", label: "GYM — Maintenance Strength",
+        sessions: [
+          { name: "GYM: DB 1-leg RDL — 3×12. Maintain Week 8 peak loads." },
+          { name: "GYM: Stabilization lunge — 3×10" },
+          { name: "GYM: Side lunges — 3×10. LEFT: shallower depth." },
+          { name: "GYM: Hip thrust — 3×10" },
+          { name: "GYM: Cable abduction — 3×12" },
+          { name: "GYM: Leg extension — 3×12" },
+          { name: "Plyometrics: split squat jumps + lateral bounds (3×8 each)" },
+          { name: "GYM: Smith machine calf raises — maintain Week 8 loads, 3×8–10, 4s eccentric" },
+          { name: "Nordics — 3×5 (maintain)" },
+          { name: "Full Copenhagen — maintain" },
+          { name: "Side plank hip abduction — 3×30s" },
+        ],
+        notes: "Strength is maintenance mode. Priority is conditioning and games.",
+      },
+      {
+        day: "Thursday", type: "conditioning", label: "Peak RSA Session",
+        hrTarget: "Z4–5 (158–182 bpm)",
+        sessions: [
+          { name: "BAREFOOT Movement Prep" },
+          { name: "10 min jog", zone: "Z2" },
+          { name: "4 sets of: 6×20m sprint / 20s rest / 3 min between sets", zone: "Z5" },
+          { name: "Agility circuit × 8 reps" },
+          { name: "8 min jog cool-down", zone: "Z2" },
+        ],
+        notes: "Peak sprint volume. 4 sets instead of 3. If crushed by set 3, drop set 4. Tape/brace L ankle for all agility. Post-run tissue management.",
+      },
+      {
+        day: "Friday", type: "conditioning", label: "Active Recovery",
+        hrTarget: "Z1",
+        sessions: [{ name: "20 min very easy walk", zone: "Z1" }],
+      },
+      {
+        day: "Saturday", type: "strength", label: "GYM — Light Strength",
+        sessions: [
+          { name: "GYM: DB 1-leg RDL — 2×12. Maintain loads." },
+          { name: "GYM: Stabilization lunge — 2×10" },
+          { name: "GYM: Side lunges — 2×10" },
+          { name: "GYM: Hip thrust — 2×10" },
+          { name: "GYM: Single-leg calf raises — 2×12, 3s eccentric" },
+          { name: "Nordics — 2×4" },
+          { name: "Side plank hip abduction — 2×30s" },
+        ],
+      },
+      {
+        day: "Sunday", type: "conditioning", label: "Pickup Game — Full Duration",
+        hrTarget: "Z2–5",
+        sessions: [
+          { name: "Full pickup game aiming for 75–90 min" },
+          { name: "Or 2×35 min solo match sim" },
+        ],
+        notes: "Try to play as close to full game duration as possible. This is your fitness test.",
+      },
+    ],
+  });
+
+  // ===== WEEK 11 =====
+  weeks.push({
+    number: 11,
+    phase: "Match Prep & Taper",
+    focus: "Reduce volume, maintain intensity. Start sharpening for match day.",
+    progressionGate: "Feeling fresh, not fatigued. Resting HR stable. Confidence building.",
+    days: [
+      {
+        day: "Monday", type: "conditioning", label: "Reduced Match Sim",
+        hrTarget: "Z2–5",
+        sessions: [
+          { name: "BAREFOOT Movement Prep" },
+          { name: "2×20 min match sim (reduced from 2×30)", zone: "mixed" },
+        ],
+        notes: "Volume drops but intensity stays. You should feel faster and sharper.",
+      },
+      { day: "Tuesday", type: "rest", label: "Rest + Daily Physio", sessions: [] },
+      {
+        day: "Wednesday", type: "strength", label: "GYM — Maintenance (Reduced)",
+        sessions: [
+          { name: "GYM: DB 1-leg RDL — 2×12. Maintain loads." },
+          { name: "GYM: Stabilization lunge — 2×8" },
+          { name: "GYM: Side lunges — 2×8" },
+          { name: "GYM: Hip thrust — 2×10" },
+          { name: "GYM: Single-leg calf raises — 2×10, 3s eccentric" },
+          { name: "Plyometrics: 2×6 each. LEFT leg forward on split squats: control depth." },
+          { name: "Calf raises: maintain Week 8 loads, 3×10, 4s eccentric" },
+          { name: "Nordics — 2×4 (maintain)" },
+          { name: "Side plank hip abduction — 2×30s" },
+        ],
+        notes: "Keeping movement patterns alive without creating fatigue.",
+      },
+      {
+        day: "Thursday", type: "conditioning", label: "Sharp Sprints",
+        hrTarget: "Z4–5",
+        sessions: [
+          { name: "BAREFOOT Movement Prep" },
+          { name: "10 min jog", zone: "Z2" },
+          { name: "2 sets of: 6×20m sprint / 30s rest / 3 min between sets", zone: "Z5" },
+          { name: "Light agility circuit × 4" },
+          { name: "10 min jog", zone: "Z2" },
+        ],
+        notes: "Reduced sets, full recovery. Maintaining speed without accumulating fatigue.",
+      },
+      {
+        day: "Friday", type: "rest", label: "Rest",
+        sessions: [{ name: "Optional: 15 min walk", zone: "Z1" }],
+      },
+      {
+        day: "Saturday", type: "conditioning", label: "Pickup Game",
+        hrTarget: "Z2–5",
+        sessions: [{ name: "45–60 min game — don't go all out, save something" }],
+        notes: "Play at 85%. Dress rehearsal, not the performance.",
+      },
+      { day: "Sunday", type: "rest", label: "Full Rest", sessions: [] },
+    ],
+  });
+
+  // ===== WEEK 12 =====
+  weeks.push({
+    number: 12,
+    phase: "Match Prep & Taper",
+    focus: "Final taper. Keep legs fresh. Stay sharp without heavy load.",
+    progressionGate: "Feeling fresh and fast. Resting HR stable. Confidence in 90-min capacity.",
+    days: [
+      {
+        day: "Monday", type: "conditioning", label: "Light Match Sim",
+        hrTarget: "Z2–4",
+        sessions: [
+          { name: "BAREFOOT Movement Prep" },
+          { name: "15 min match sim at moderate intensity", zone: "Z2–4" },
+          { name: "6×40m strides at 80%", zone: "Z3–4" },
+        ],
+        notes: "Keep the engine ticking. Low volume, moderate intensity.",
+      },
+      { day: "Tuesday", type: "rest", label: "Rest + Daily Physio", sessions: [] },
+      {
+        day: "Wednesday", type: "strength", label: "Light Activation",
+        sessions: [
+          { name: "GYM or HOME: DB 1-leg RDL — 2×10, light. Activation only." },
+          { name: "Stabilization lunge — 2×6, light" },
+          { name: "Side lunges — 2×6, light" },
+          { name: "Hip thrust — 2×8, light" },
+          { name: "Single-leg calf raises 2×10, 3s eccentric. Light." },
+          { name: "Nordics — 2×3 (light, maintain pattern)" },
+          { name: "Focus on activation, not loading" },
+        ],
+      },
+      {
+        day: "Thursday", type: "conditioning", label: "Sharpening Session",
+        hrTarget: "Z4–5",
+        sessions: [
+          { name: "10 min jog", zone: "Z2" },
+          { name: "6×20m sprints with full recovery", zone: "Z5" },
+          { name: "Light agility × 4 reps" },
+          { name: "10 min jog", zone: "Z2" },
+        ],
+        notes: "Short, sharp. You should feel fast.",
+      },
+      {
+        day: "Friday", type: "rest", label: "Rest",
+        sessions: [],
+        notes: "Hydrate, eat well, sleep 8+ hours.",
+      },
+      {
+        day: "Saturday", type: "conditioning", label: "Pickup Game (Light)",
+        hrTarget: "Z2–4",
+        sessions: [{ name: "30–45 min game at 80%. Save your legs." }],
+        notes: "Last game before match week. Don't do anything stupid.",
+      },
+      { day: "Sunday", type: "rest", label: "Full Rest", sessions: [] },
+    ],
+  });
+
+  // ===== WEEK 13 — MATCH WEEK =====
+  weeks.push({
+    number: 13,
+    phase: "Match Prep & Taper",
+    focus: "Match week. Trust the work. Stay fresh, stay sharp.",
+    progressionGate: "YOU'RE MATCH READY. Trust the 13 weeks.",
+    days: [
+      {
+        day: "Monday", type: "conditioning", label: "Light Activation Run",
+        hrTarget: "Z2–3",
+        sessions: [
+          { name: "BAREFOOT Movement Prep" },
+          { name: "15 min easy jog", zone: "Z2" },
+          { name: "4×30m strides at 80%", zone: "Z3" },
+        ],
+        notes: "Just enough to keep the legs turning over. Nothing hard this week.",
+      },
+      { day: "Tuesday", type: "rest", label: "Rest + Daily Physio", sessions: [] },
+      {
+        day: "Wednesday", type: "strength", label: "Activation Only",
+        sessions: [
+          { name: "Bodyweight circuit: mini squats, lunges, hip thrusts. 1 set each." },
+          { name: "Side plank hip abduction — 2×20s" },
+          { name: "Hollow hold — 2×20s" },
+        ],
+        notes: "Pure activation. No load. No fatigue. Just waking up the patterns.",
+      },
+      {
+        day: "Thursday", type: "conditioning", label: "Short Sharpener",
+        hrTarget: "Z4–5",
+        sessions: [
+          { name: "8 min jog", zone: "Z2" },
+          { name: "4×20m sprints with full recovery", zone: "Z5" },
+          { name: "8 min jog", zone: "Z2" },
+        ],
+        notes: "Last running session before match. 4 sprints — that's it. Feel the speed.",
+      },
+      {
+        day: "Friday", type: "rest", label: "Rest",
+        sessions: [],
+        notes: "Hydrate, eat well, sleep 8+ hours. Prepare kit: orthotics in boots, ankle tape/brace ready, H10 charged.",
+      },
+      {
+        day: "Saturday", type: "conditioning", label: "Pre-Match Activation",
+        sessions: [
+          { name: "BAREFOOT Movement Prep drills" },
+          { name: "10 min easy jog", zone: "Z2" },
+          { name: "4×30m strides", zone: "Z3" },
+          { name: "Dynamic stretching" },
+        ],
+        notes: "Just enough to feel loose and ready. If match is Sunday, this is your activation day.",
+      },
+      {
+        day: "Sunday", type: "match", label: "⚽ MATCH DAY",
+        sessions: [
+          { name: "Full warm-up with Movement Prep drills" },
+          { name: "Play the full 90 minutes" },
+          { name: "Wear your H10 — this is the data set you've been building toward" },
+        ],
+        notes: "Trust the 13 weeks. Manage your energy — don't sprint everything in the first 15 min. The fitness is there. Orthotics in your boots. L ankle taped or braced. Test boot+orthotic+tape combo in training before today.",
+      },
+    ],
+  });
+
+  return weeks;
+}
+
+const PROGRAM_DATA = {
+  meta: {
+    title: "Full 90",
+    subtitle: "13-week return-to-sport program for PTFJ, lateral chain, L hip restriction, L ankle hypermobility",
+    phases: [
+      { name: "Base + Nerve Recovery", weeks: [1, 2, 3], color: "#2d6a4f" },
+      { name: "Transition to Running", weeks: [4, 5, 6], color: "#e07a2f" },
+      { name: "Soccer-Specific", weeks: [7, 8, 9, 10], color: "#c2255c" },
+      { name: "Match Prep & Taper", weeks: [11, 12, 13], color: "#364fc7" },
+    ],
+  },
+  hrZones: [
+    { zone: 1, name: "Recovery", bpm: "121–133", pct: "50–60%", desc: "Very easy, walking pace" },
+    { zone: 2, name: "Aerobic Base", bpm: "133–145", pct: "60–70%", desc: "Conversational, sustainable" },
+    { zone: 3, name: "Tempo", bpm: "145–158", pct: "70–80%", desc: "Comfortably hard, breathing heavier" },
+    { zone: 4, name: "Threshold", bpm: "158–170", pct: "80–90%", desc: "Hard, short sentences only" },
+    { zone: 5, name: "Max", bpm: "170–182", pct: "90–100%", desc: "All-out sprint effort" },
+  ],
+  dailyPhysio: {
+    tier1_hip: {
+      label: "Hip Mobility — 2–3×/day",
+      sublabel: "Frequency is the accelerator. ~5 min per round.",
+      items: [
+        { name: "90/90 Hip Switches", detail: "2×10 slow. Focus on LEFT hip IR. Highest-leverage drill — addresses root cause of PTFJ chain. L foot dorsiflexed when L leg is in IR (slackens peroneal nerve).", icon: "🔄", freq: "2–3×/day" },
+        { name: "Half-Kneeling Hip Flexor Stretch", detail: "3×30s each side, posterior pelvic tilt. LEFT priority. Opens anterior hip corridor.", icon: "🦵", freq: "2–3×/day" },
+        { name: "Side-Lying Hip IR Stretch", detail: "2×30s LEFT side. Knee at 90°, let lower leg fall outward. Don't force.", icon: "↩️", freq: "2–3×/day" },
+      ],
+    },
+    tier1_nerve: {
+      label: "Nerve Desensitization Isometrics — 2×/day",
+      sublabel: "Break cortical inhibition, raise nerve firing threshold (Rio et al. 2015). Also do 1 round before running (45-min analgesic window).",
+      items: [
+        { name: "Isometric Eversion Hold", detail: "5×45s at 50–70% effort, foot in mid-range (not full eversion). Loads peroneals without dynamic nerve sliding. Complements physio-prescribed resisted eversions.", icon: "🦶", freq: "2×/day" },
+        { name: "Isometric Calf Hold", detail: "5×45s mid-range (partial calf raise height, not full), wall for support. Loads gastrocnemius/soleus without repetitive fibular head compression.", icon: "🦵", freq: "2×/day" },
+      ],
+    },
+    tier1_stability: {
+      label: "Stability & Release",
+      sublabel: "",
+      items: [
+        { name: "Single-Leg Mini Squats (valgus control)", detail: "2×10 each side, mirror or phone. Quarter squat, slow, knee over 4th/5th toe.", icon: "🪞" },
+        { name: "Piriformis Release (ball)", detail: "6–8 passes each side, 3–5s per roll. Don't grind.", icon: "🎾" },
+        { name: "Glute Release", detail: "3×30s, do 3× throughout the day", icon: "💪" },
+        { name: "Hollow Hold", detail: "3×30s barefoot on firm surface", icon: "🔥" },
+        { name: "Side Plank Hip Abduction", detail: "3×30s each side, 90s rest. 3×/week (strength days + 1). Fires glute med under stability demand.", icon: "⬆️" },
+      ],
+    },
+    tier1_pending: {
+      label: "Pending Nick Clearance",
+      sublabel: "Do NOT start until physio approves — nerve proximity concerns.",
+      items: [
+        { name: "Tibial IR Isometric (Popliteus)", detail: "Sit knees at 90°, pigeon-toe foot, press inside of foot against solid object. 3–5×45s at 70% effort. Targets tibial rotation control — addresses tibial over-rotation link in hip → PTFJ chain.", icon: "🔒" },
+        { name: "Biceps Femoris Tension Hold", detail: "Sit in chair, dig heel into floor slightly outward (ER), pull back without moving. 3–5×45s. Isometrically stiffens lateral hamstring. No self-release near fibular head — isometric mid-range loading may be safe.", icon: "🔒" },
+      ],
+    },
+    tier2: [
+      { name: "Short Foot Exercise", detail: "3×10 holds — activate arch without curling toes", icon: "🦶" },
+      { name: "Big Toe Press-Downs", detail: "3×10 — press big toe down, lift others. Rebuilds windlass mechanism. Do 2×/day.", icon: "👣" },
+      { name: "Towel Scrunches", detail: "2×15 each foot", icon: "🧶" },
+      { name: "Single-Leg Balance", detail: "3×30s each leg, eyes CLOSED. L = hypermobility control. R = plantar plate stability.", icon: "⚖️" },
+      { name: "Ankle Alphabet Tracing", detail: "Trace A–Z with each foot. GATE: skip LEFT if L ankle >1/10.", icon: "🔤" },
+      { name: "Banded Dorsiflexion", detail: "2×15 each ankle. GATE: skip LEFT if L ankle >1/10.", icon: "🔗" },
+      { name: "Resisted Eversion (physio-prescribed)", detail: "3×12 each side, 90s rest, 1×/day. GATE: skip LEFT if L ankle >1/10.", icon: "🔁" },
+      { name: "Peroneal Nerve Glides", detail: "NOT YET. Ask Nick next visit. Isometrics should desensitize first before dynamic neural mobilization.", icon: "⛔" },
+    ],
+  },
+  weeks: generateWeeks(),
+};
+
+function getPhaseForWeek(weekNum) {
+  return PROGRAM_DATA.meta.phases.find((p) => p.weeks.includes(weekNum));
+}
+
+const typeColors = {
+  conditioning: { bg: "#14532d", text: "#bbf7d0", badge: "#22c55e" },
+  strength: { bg: "#4a1d96", text: "#ddd6fe", badge: "#a78bfa" },
+  rest: { bg: "#1e293b", text: "#94a3b8", badge: "#475569" },
+  match: { bg: "#7c2d12", text: "#fed7aa", badge: "#fb923c" },
+};
+
+const StorageManager = {
+  key: "full-90-tracker-v3",
+  async load() {
+    try {
+      const result = await window.storage.get(this.key);
+      return result ? JSON.parse(result.value) : {};
+    } catch {
+      return {};
+    }
+  },
+  async save(data) {
+    try {
+      await window.storage.set(this.key, JSON.stringify(data));
+    } catch (e) {
+      console.error("Storage save failed:", e);
+    }
+  },
+};
+
+function App() {
+  const [selectedWeek, setSelectedWeek] = useState(1);
+  const [expandedDay, setExpandedDay] = useState(null);
+  const [completions, setCompletions] = useState({});
+  const [notes, setNotes] = useState({});
+  const [view, setView] = useState("program");
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    StorageManager.load().then((data) => {
+      if (data.completions) setCompletions(data.completions);
+      if (data.notes) setNotes(data.notes);
+      // Auto-select current week
+      const now = new Date();
+      const diffMs = now - START_DATE;
+      const diffDays = Math.floor(diffMs / 86400000);
+      let cumDays = 0;
+      for (const wk of PROGRAM_DATA.weeks) {
+        cumDays += wk.days.length;
+        if (diffDays < cumDays) { setSelectedWeek(wk.number); break; }
+      }
+      setLoading(false);
+    });
+  }, []);
+
+  const persist = useCallback((newC, newN) => {
+    StorageManager.save({ completions: newC || completions, notes: newN || notes });
+  }, [completions, notes]);
+
+  const toggleComplete = (weekNum, dayIdx) => {
+    const key = `${weekNum}-${dayIdx}`;
+    const next = { ...completions, [key]: !completions[key] };
+    setCompletions(next);
+    persist(next, notes);
+  };
+
+  const updateNote = (weekNum, dayIdx, text) => {
+    const key = `${weekNum}-${dayIdx}`;
+    const next = { ...notes, [key]: text };
+    setNotes(next);
+    persist(completions, next);
+  };
+
+  const weekData = PROGRAM_DATA.weeks.find((w) => w.number === selectedWeek);
+  const phase = getPhaseForWeek(selectedWeek);
+  const completedDays = weekData ? weekData.days.filter((_, i) => completions[`${selectedWeek}-${i}`]).length : 0;
+
+  if (loading) {
+    return (
+      <div style={{
+        background: "#0a0a0a", minHeight: "100vh", display: "flex",
+        alignItems: "center", justifyContent: "center", color: "#e2e8f0",
+        fontFamily: "'DM Sans', system-ui, sans-serif",
+      }}>
+        <p>Loading your program...</p>
+      </div>
+    );
+  }
+
+  return (
+    <div style={{ background: "#0a0a0a", minHeight: "100vh", color: "#e2e8f0", fontFamily: "'DM Sans', system-ui, sans-serif", padding: "0 0 60px 0" }}>
+
+      {/* Header */}
+      <div className="app-header" style={{ background: "linear-gradient(135deg, #0f172a 0%, #1a1a2e 50%, #16213e 100%)", padding: "28px 20px 20px", borderBottom: "1px solid #1e293b" }}>
+        <div style={{ maxWidth: 600, margin: "0 auto" }}>
+          <div style={{ fontSize: 11, fontFamily: "'DM Mono', monospace", color: phase?.color || "#94a3b8", textTransform: "uppercase", letterSpacing: 2, marginBottom: 6 }}>
+            13-WEEK PROGRAM
+          </div>
+          <h1 style={{ fontSize: 26, fontWeight: 700, margin: "0 0 4px", background: "linear-gradient(90deg, #f8fafc, #94a3b8)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>
+            Full 90
+          </h1>
+          <p style={{ fontSize: 12, color: "#64748b", margin: 0, lineHeight: 1.4 }}>
+            PTFJ · peroneal nerve sensitization · L hip restriction · lateral chain · L ankle hypermobility
+          </p>
+        </div>
+      </div>
+
+      {/* Nav tabs */}
+      <div style={{ display: "flex", gap: 0, maxWidth: 600, margin: "0 auto", borderBottom: "1px solid #1e293b", background: "#0f1219" }}>
+        {[
+          { id: "program", label: "Program" },
+          { id: "zones", label: "HR Zones" },
+          { id: "daily", label: "Daily Physio" },
+        ].map((tab) => (
+          <button key={tab.id} onClick={() => setView(tab.id)} style={{
+            flex: 1, padding: "12px 8px", border: "none",
+            background: view === tab.id ? "#1e293b" : "transparent",
+            color: view === tab.id ? "#f8fafc" : "#64748b",
+            fontSize: 13, fontWeight: 600, cursor: "pointer",
+            borderBottom: view === tab.id ? `2px solid ${phase?.color || "#64748b"}` : "2px solid transparent",
+            fontFamily: "'DM Sans', system-ui", transition: "all 0.2s",
+          }}>
+            {tab.label}
+          </button>
+        ))}
+      </div>
+
+      <div className="app-body" style={{ maxWidth: 600, margin: "0 auto", padding: "0 16px" }}>
+
+        {/* HR Zones View */}
+        {view === "zones" && (
+          <div style={{ paddingTop: 20 }}>
+            <h2 style={{ fontSize: 18, fontWeight: 700, marginBottom: 4 }}>Heart Rate Zones</h2>
+            <p style={{ fontSize: 12, color: "#64748b", marginBottom: 16 }}>
+              Karvonen method — Max 182, Rest 60, HRR 122. Locked Feb 16.
+            </p>
+            {PROGRAM_DATA.hrZones.map((z) => {
+              const zoneColors = ["#22c55e", "#84cc16", "#eab308", "#f97316", "#ef4444"];
+              return (
+                <div key={z.zone} style={{ display: "flex", alignItems: "center", gap: 12, padding: "12px 14px", marginBottom: 8, borderRadius: 10, background: "#111827", border: "1px solid #1e293b" }}>
+                  <div style={{ width: 40, height: 40, borderRadius: 8, background: zoneColors[z.zone - 1] + "22", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 16, fontWeight: 700, color: zoneColors[z.zone - 1], fontFamily: "'DM Mono', monospace" }}>
+                    Z{z.zone}
+                  </div>
+                  <div style={{ flex: 1 }}>
+                    <div style={{ fontSize: 14, fontWeight: 600 }}>{z.name}</div>
+                    <div style={{ fontSize: 14, color: "#f8fafc", fontFamily: "'DM Mono', monospace", fontWeight: 600 }}>{z.bpm} bpm</div>
+                    <div style={{ fontSize: 11, color: "#64748b", marginTop: 2 }}>{z.desc}</div>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        )}
+
+        {/* Daily Physio View — TIERED */}
+        {view === "daily" && (
+          <div style={{ paddingTop: 20 }}>
+            <h2 style={{ fontSize: 18, fontWeight: 700, marginBottom: 4 }}>Daily Physio — Tiered Structure</h2>
+
+            {/* Tier 1 */}
+            <div style={{ marginTop: 16 }}>
+              <div style={{ fontSize: 13, fontWeight: 700, color: "#22c55e", textTransform: "uppercase", letterSpacing: 1, marginBottom: 8, padding: "6px 10px", background: "#0f1a14", borderRadius: 8, border: "1px solid #16653422" }}>
+                ⭐ Tier 1: Essential — Every Day (~15 min/round)
+              </div>
+
+              {/* Render each tier1 subgroup */}
+              {["tier1_hip", "tier1_nerve", "tier1_stability", "tier1_pending"].map((groupKey) => {
+                const group = PROGRAM_DATA.dailyPhysio[groupKey];
+                if (!group) return null;
+                const isPending = groupKey === "tier1_pending";
+                return (
+                  <div key={groupKey} style={{ marginBottom: 16 }}>
+                    <div style={{ fontSize: 12, fontWeight: 700, color: isPending ? "#f59e0b" : "#4ade80", padding: "4px 8px", marginBottom: 4, opacity: isPending ? 0.8 : 1 }}>
+                      {isPending ? "🔒 " : ""}{group.label}
+                    </div>
+                    {group.sublabel && (
+                      <p style={{ fontSize: 11, color: isPending ? "#a3865a" : "#6b9e7e", margin: "0 0 8px", padding: "0 8px" }}>
+                        {group.sublabel}
+                      </p>
+                    )}
+                    {group.items.map((ex, i) => (
+                      <div key={i} style={{ padding: "12px 14px", marginBottom: 6, borderRadius: 10, background: isPending ? "#1a170f" : "#111827", border: `1px solid ${isPending ? "#854d0e33" : "#1e293b"}`, opacity: isPending ? 0.7 : 1 }}>
+                        <div style={{ display: "flex", alignItems: "flex-start", gap: 10 }}>
+                          <span style={{ fontSize: 20, flexShrink: 0 }}>{ex.icon}</span>
+                          <div style={{ flex: 1 }}>
+                            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                              <div style={{ fontSize: 13, fontWeight: 600 }}>{ex.name}</div>
+                              {ex.freq && <span style={{ fontSize: 9, padding: "2px 6px", borderRadius: 4, background: "#22c55e22", color: "#22c55e", fontFamily: "'DM Mono', monospace" }}>{ex.freq}</span>}
+                            </div>
+                            <div style={{ fontSize: 11, color: "#94a3b8", marginTop: 2, lineHeight: 1.4 }}>{ex.detail}</div>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                );
+              })}
+            </div>
+
+            {/* Tier 2 */}
+            <div style={{ marginTop: 20 }}>
+              <div style={{ fontSize: 13, fontWeight: 700, color: "#eab308", textTransform: "uppercase", letterSpacing: 1, marginBottom: 8, padding: "6px 10px", background: "#1a1207", borderRadius: 8, border: "1px solid #854d0e33" }}>
+                📋 Tier 2: Extended — Training Days + Weekends (~10 min)
+              </div>
+              {PROGRAM_DATA.dailyPhysio.tier2.map((ex, i) => (
+                <div key={i} style={{ padding: "12px 14px", marginBottom: 6, borderRadius: 10, background: "#111827", border: "1px solid #1e293b" }}>
+                  <div style={{ display: "flex", alignItems: "flex-start", gap: 10 }}>
+                    <span style={{ fontSize: 20, flexShrink: 0 }}>{ex.icon}</span>
+                    <div>
+                      <div style={{ fontSize: 13, fontWeight: 600 }}>{ex.name}</div>
+                      <div style={{ fontSize: 11, color: "#94a3b8", marginTop: 2, lineHeight: 1.4 }}>{ex.detail}</div>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            {/* Key principles */}
+            <div style={{ marginTop: 20, padding: 14, borderRadius: 10, background: "#0f1a14", border: "1px solid #16653422" }}>
+              <p style={{ fontSize: 13, color: "#4ade80", margin: 0, fontWeight: 600 }}>Key Principles</p>
+              <div style={{ fontSize: 12, color: "#6b9e7e", margin: "6px 0 0", lineHeight: 1.8 }}>
+                <div>🔑 90/90 hip switches — highest-leverage drill for root cause of PTFJ chain</div>
+                <div>🔑 Hip mobility 2–3×/day — frequency is the accelerator</div>
+                <div>🔑 Isometric eversions + calf holds before running — 45-min analgesic window (Rio et al. 2015)</div>
+                <div>🔑 Post-run: foam roll mid-belly hamstrings + calves immediately + 2–3 hrs later</div>
+                <div>🔑 Graded running exposure — increase 2–3 min/session only if PTFJ stayed below threshold (including 5-hr delayed window)</div>
+                <div>🔑 Never stack short + full lever Copenhagen on same day</div>
+                <div>🔑 Don't program cable abduction AND side plank hip abduction same day</div>
+                <div>🔑 No self-release near fibular head — peroneal nerve proximity</div>
+                <div>🔑 Heat not ice for all nerve-related flare-ups</div>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Program View */}
+        {view === "program" && (
+          <>
+            {/* Phase indicator */}
+            <div style={{ display: "flex", gap: 4, padding: "16px 0 8px" }}>
+              {PROGRAM_DATA.meta.phases.map((p) => (
+                <div key={p.name} style={{ flex: p.weeks.length, textAlign: "center" }}>
+                  <div style={{ height: 4, borderRadius: 2, marginBottom: 6, background: p.weeks.includes(selectedWeek) ? p.color : p.color + "33", transition: "background 0.3s" }} />
+                  <div style={{ fontSize: 9, fontFamily: "'DM Mono', monospace", textTransform: "uppercase", letterSpacing: 1, color: p.weeks.includes(selectedWeek) ? p.color : "#475569" }}>
+                    {p.name}
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            {/* Week selector */}
+            <div style={{ display: "flex", gap: 4, padding: "12px 0", overflowX: "auto", WebkitOverflowScrolling: "touch" }}>
+              {Array.from({ length: 13 }, (_, i) => i + 1).map((wk) => {
+                const wkPhase = getPhaseForWeek(wk);
+                const isSelected = selectedWeek === wk;
+                const wkData = PROGRAM_DATA.weeks.find((w) => w.number === wk);
+                const wkCompleted = wkData ? wkData.days.filter((_, di) => completions[`${wk}-${di}`]).length : 0;
+                const allDone = wkData && wkCompleted === wkData.days.length;
+                const isDeload = wk === 9;
+
+                return (
+                  <button key={wk} onClick={() => { setSelectedWeek(wk); setExpandedDay(null); }}
+                    style={{
+                      minWidth: 40, height: 40, borderRadius: 10, border: "none",
+                      background: isSelected ? wkPhase?.color || "#334155" : "#111827",
+                      color: isSelected ? "#fff" : "#94a3b8",
+                      fontSize: 13, fontWeight: 700, cursor: "pointer",
+                      position: "relative", transition: "all 0.2s",
+                      outline: isSelected ? `2px solid ${wkPhase?.color}44` : "none", outlineOffset: 2,
+                      fontFamily: "'DM Sans', system-ui",
+                    }}>
+                    {wk}
+                    {allDone && (
+                      <div style={{ position: "absolute", top: -3, right: -3, width: 14, height: 14, borderRadius: 7, background: "#22c55e", fontSize: 9, lineHeight: "14px", textAlign: "center", color: "#fff" }}>✓</div>
+                    )}
+                    {isDeload && !allDone && (
+                      <div style={{ position: "absolute", bottom: -2, left: "50%", transform: "translateX(-50%)", fontSize: 7, color: "#fbbf24", fontFamily: "'DM Mono', monospace" }}>DL</div>
+                    )}
+                  </button>
+                );
+              })}
+            </div>
+
+            {/* Week header */}
+            {weekData && (
+              <>
+                <div style={{ padding: "14px 16px", borderRadius: 12, marginBottom: 12, background: `${phase?.color}11`, border: `1px solid ${phase?.color}33` }}>
+                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 6 }}>
+                    <h2 style={{ fontSize: 18, fontWeight: 700, margin: 0 }}>
+                      Week {weekData.number}
+                      {weekData.number === 9 && <span style={{ fontSize: 12, color: "#fbbf24", marginLeft: 8 }}>⚡ DELOAD</span>}
+                      <span style={{ fontSize: 12, fontWeight: 400, color: "#64748b", marginLeft: 8 }}>
+                        {formatDate(getDateForDay(weekData.number, 0))} — {formatDate(getDateForDay(weekData.number, weekData.days.length - 1))}
+                      </span>
+                    </h2>
+                    <span style={{ fontSize: 12, fontFamily: "'DM Mono', monospace", color: phase?.color, fontWeight: 500 }}>
+                      {completedDays}/{weekData.days.length}
+                    </span>
+                  </div>
+                  <p style={{ fontSize: 13, color: "#94a3b8", margin: "0 0 8px" }}>{weekData.focus}</p>
+                  <div style={{ fontSize: 11, color: "#f59e0b", fontFamily: "'DM Mono', monospace", padding: "6px 10px", background: "#1a160a", borderRadius: 6 }}>
+                    🚦 Gate: {weekData.progressionGate}
+                  </div>
+                </div>
+
+                {/* Days */}
+                {weekData.days.map((day, dayIdx) => {
+                  const isExpanded = expandedDay === dayIdx;
+                  const isComplete = completions[`${selectedWeek}-${dayIdx}`];
+                  const tc = typeColors[day.type] || typeColors.rest;
+                  const noteKey = `${selectedWeek}-${dayIdx}`;
+
+                  return (
+                    <div key={dayIdx} style={{ marginBottom: 8, borderRadius: 12, overflow: "hidden", border: `1px solid ${isComplete ? "#22c55e33" : "#1e293b"}`, background: isComplete ? "#0a1f0f" : "#111827", transition: "all 0.2s" }}>
+                      <div onClick={() => setExpandedDay(isExpanded ? null : dayIdx)} style={{ display: "flex", alignItems: "center", gap: 10, padding: "12px 14px", cursor: "pointer" }}>
+                        <div onClick={(e) => { e.stopPropagation(); toggleComplete(selectedWeek, dayIdx); }}
+                          style={{ width: 24, height: 24, borderRadius: 6, border: isComplete ? "2px solid #22c55e" : "2px solid #334155", background: isComplete ? "#22c55e" : "transparent", display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer", flexShrink: 0, transition: "all 0.2s", fontSize: 14, color: "#fff" }}>
+                          {isComplete ? "✓" : ""}
+                        </div>
+                        <div style={{ flex: 1, minWidth: 0 }}>
+                          <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                            <span style={{ fontSize: 12, fontFamily: "'DM Mono', monospace", color: "#64748b", minWidth: 28 }}>{day.day.slice(0, 3)}</span>
+                            <span style={{ fontSize: 10, fontFamily: "'DM Mono', monospace", color: "#475569" }}>{formatDate(getDateForDay(selectedWeek, dayIdx))}</span>
+                            <span style={{ fontSize: 10, padding: "2px 8px", borderRadius: 4, background: tc.bg, color: tc.badge, fontWeight: 600, textTransform: "uppercase", letterSpacing: 0.5 }}>{day.type}</span>
+                          </div>
+                          <div style={{ fontSize: 14, fontWeight: 600, marginTop: 2, color: isComplete ? "#6ee7b7" : "#e2e8f0", textDecoration: isComplete ? "line-through" : "none", opacity: isComplete ? 0.7 : 1 }}>
+                            {day.label}
+                          </div>
+                        </div>
+                        <div style={{ fontSize: 18, color: "#475569", transform: isExpanded ? "rotate(180deg)" : "rotate(0)", transition: "transform 0.2s" }}>▾</div>
+                      </div>
+
+                      {isExpanded && (
+                        <div style={{ padding: "0 14px 14px", borderTop: "1px solid #1e293b" }}>
+                          {day.hrTarget && (
+                            <div style={{ display: "inline-block", margin: "10px 0 6px", fontSize: 11, fontFamily: "'DM Mono', monospace", padding: "3px 10px", borderRadius: 4, background: "#ef444422", color: "#fca5a5" }}>
+                              ♥ Target: {day.hrTarget}
+                            </div>
+                          )}
+                          {day.sessions.length > 0 && (
+                            <div style={{ marginTop: 8 }}>
+                              {day.sessions.map((s, si) => (
+                                <div key={si} style={{ display: "flex", gap: 8, padding: "6px 0", borderBottom: si < day.sessions.length - 1 ? "1px solid #1e293b22" : "none" }}>
+                                  <span style={{ color: "#475569", fontSize: 11, marginTop: 2, fontFamily: "'DM Mono', monospace" }}>{String(si+1).padStart(2,"0")}</span>
+                                  <div style={{ flex: 1 }}>
+                                    <span style={{ fontSize: 13, color: "#cbd5e1" }}>{s.name}</span>
+                                    {s.zone && <span style={{ marginLeft: 6, fontSize: 10, padding: "1px 6px", borderRadius: 3, background: "#1e293b", color: "#94a3b8", fontFamily: "'DM Mono', monospace" }}>{s.zone}</span>}
+                                  </div>
+                                </div>
+                              ))}
+                            </div>
+                          )}
+                          {day.physio && (
+                            <div style={{ marginTop: 10, padding: "8px 10px", borderRadius: 8, background: "#4a1d9611", border: "1px solid #4a1d9633" }}>
+                              <div style={{ fontSize: 10, fontWeight: 700, color: "#a78bfa", textTransform: "uppercase", letterSpacing: 1, marginBottom: 4 }}>Physio Integration</div>
+                              {day.physio.map((p, pi) => <div key={pi} style={{ fontSize: 12, color: "#c4b5fd", lineHeight: 1.5 }}>{p}</div>)}
+                            </div>
+                          )}
+                          {day.notes && (
+                            <div style={{ marginTop: 10, padding: "8px 10px", borderRadius: 8, background: "#1e293b44" }}>
+                              <div style={{ fontSize: 10, fontWeight: 700, color: "#64748b", textTransform: "uppercase", letterSpacing: 1, marginBottom: 4 }}>Notes & Precautions</div>
+                              <p style={{ fontSize: 12, color: "#94a3b8", margin: 0, lineHeight: 1.5 }}>{day.notes}</p>
+                            </div>
+                          )}
+                          <div style={{ marginTop: 10 }}>
+                            <textarea placeholder="Add your notes (HR readings, how you felt, pain levels...)" value={notes[noteKey] || ""} onChange={(e) => updateNote(selectedWeek, dayIdx, e.target.value)}
+                              style={{ width: "100%", minHeight: 60, padding: "8px 10px", borderRadius: 8, border: "1px solid #1e293b", background: "#0a0a0a", color: "#e2e8f0", fontSize: 12, fontFamily: "'DM Sans', system-ui", resize: "vertical", outline: "none", boxSizing: "border-box" }}
+                              onFocus={(e) => e.target.style.borderColor = phase?.color || "#475569"}
+                              onBlur={(e) => e.target.style.borderColor = "#1e293b"} />
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  );
+                })}
+              </>
+            )}
+          </>
+        )}
+      </div>
+    </div>
+  );
+}
+
+export default App;
